@@ -67,7 +67,7 @@ const dragging = ref(false);
 const draggingPath = computed(() => {
   if (!dragging.value) return [];
 
-  if (selectedTool.value === "Base Block") {
+  if (selectedTool.value === "base") {
     const { x: sx, y: sy } = startPoint.value;
     const { x: cx, y: cy } = currentPoint.value;
 
@@ -110,27 +110,31 @@ function available(x, y) {
     return false;
   }
 
-  // 左側或者右側是 moving 不能放
-  if (
-    mapData.value[x - 1]?.[y] === "moving" ||
-    mapData.value[x + 1]?.[y] === "moving"
-  ) {
-    return false;
-  }
-
-  // 左側或者右側是 moving 不能放
-  if (
-    selectedTool.value === "moving" &&
-    (mapData.value[x - 2]?.[y] === "moving" ||
-      mapData.value[x + 2]?.[y] === "moving")
-  ) {
-    return false;
-  }
-
   //左右邊界不能放 moving
+  if (selectedTool.value === "moving" && (x <= 0 || x >= mapSize.value.w - 1)) {
+    return false;
+  }
+
+  // 左側或者右側有東西不能放 moving
   if (
     selectedTool.value === "moving" &&
-    (x === 0 || x === mapSize.value.w - 1)
+    (mapData.value[x - 1]?.[y] || mapData.value[x + 1]?.[y])
+  ) {
+    return false;
+  }
+
+  // 上下邊界不能放 moving-y
+  if (
+    selectedTool.value === "moving-y" &&
+    (y <= 0 || y >= mapSize.value.h - 1)
+  ) {
+    return false;
+  }
+
+  // 上下有東西不能放 moving-y
+  if (
+    selectedTool.value === "moving-y" &&
+    (mapData.value[x]?.[y - 1] || mapData.value[x]?.[y + 1])
   ) {
     return false;
   }
@@ -162,8 +166,21 @@ function mouseUpOnBlock(x, y) {
     default:
       if (sameBlock) {
         // 在同一格 mouse down & up，就放置對應的 block
-        if (available(cx, cy)) mapData.value[cx][cy] = selectedTool.value;
-      } else if (dragging.value && selectedTool.value === "Base Block") {
+        if (available(cx, cy)) {
+          mapData.value[cx][cy] = selectedTool.value;
+
+          // 標記 moving platform
+          if (selectedTool.value === "moving") {
+            mapData.value[cx - 1][cy] = "moving-left";
+            mapData.value[cx + 1][cy] = "moving-right";
+          }
+
+          if (selectedTool.value === "moving-y") {
+            mapData.value[cx][cy - 1] = "moving-top";
+            mapData.value[cx][cy + 1] = "moving-down";
+          }
+        }
+      } else if (dragging.value && selectedTool.value === "base") {
         // 是在 dragging
         draggingPath.value.forEach(({ x: px, y: py }) => {
           if (available(px, py)) mapData.value[px][py] = selectedTool.value;
@@ -188,16 +205,28 @@ function mouseUpOnScreen(e) {
   }
 }
 
+// 按 R 旋轉 moving platform
+function keyDown(e) {
+  const tool = selectedTool.value;
+  if (e.key === "r" && (tool === "moving" || tool === "moving-y")) {
+    selectedTool.value = tool === "moving" ? "moving-y" : "moving";
+  }
+}
+
 onMounted(() => {
   document.addEventListener("mousedown", mouseDownOnScreen);
   document.addEventListener("mousemove", mouseMove);
   document.addEventListener("mouseup", mouseUpOnScreen);
+
+  document.addEventListener("keydown", keyDown);
 });
 
 onUnmounted(() => {
   document.removeEventListener("mousedown", mouseDownOnScreen);
   document.removeEventListener("mousemove", mouseMove);
   document.removeEventListener("mouseup", mouseUpOnScreen);
+
+  document.removeEventListener("keydown", keyDown);
 });
 </script>
 <template>
@@ -243,6 +272,7 @@ onUnmounted(() => {
     </main>
     <footer>
       <button>Play Demo</button>
+      {{ selectedTool }}
       {{ startPoint }}
       {{ currentPoint }}
       {{ dragging }}
@@ -309,30 +339,45 @@ onUnmounted(() => {
         }
       }
 
-      /* 移動平台 */
-      &.moving,
-      &.moving-preview {
-        background-color: #ccc;
-
-        &::before,
-        &::after {
-          content: "";
-          background: #ccc;
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          transform: translateX(-100%);
-        }
-
-        &::after {
-          transform: translateX(100%);
-        }
+      /* 水平移動平台 */
+      &.moving::after,
+      &.moving-preview::after {
+        content: "〰️";
+        position: absolute;
+        width: 150px;
+        margin-left: -50px;
+        height: 100%;
+        display: grid;
+        place-content: center;
+        font-size: 2rem;
+        background: #ccc;
       }
       &.moving-preview {
         opacity: 0.5;
 
-        &.taken {
-          border-color: tomato transparent transparent transparent;
+        &.taken::after {
+          background-color: tomato;
+        }
+      }
+
+      /* 垂直移動平台 */
+      &.moving-y::after,
+      &.moving-y-preview::after {
+        content: "〰️";
+        position: absolute;
+        width: 100%;
+        height: 150px;
+        margin-top: -50px;
+        display: grid;
+        place-content: center;
+        font-size: 2rem;
+        background: #ccc;
+      }
+      &.moving-y-preview {
+        opacity: 0.5;
+
+        &.taken::after {
+          background-color: tomato;
         }
       }
     }
