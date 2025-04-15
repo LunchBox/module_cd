@@ -322,6 +322,7 @@ onUnmounted(() => {
         }
       }
 
+      /* 星星 */
       &.star::after,
       &.star-preview::after {
         content: "⭐";
@@ -334,8 +335,51 @@ onUnmounted(() => {
       }
       &.star-preview {
         opacity: 0.5;
+
+        &.taken::after {
+          background-color: tomato;
+        }
       }
 
+      /* 彈簧 */
+      &.jump::after,
+      &.jump-preview::after {
+        content: "🆙";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: grid;
+        place-content: center;
+        font-size: 2rem;
+      }
+      &.jump-preview {
+        opacity: 0.5;
+
+        &.taken::after {
+          background-color: tomato;
+        }
+      }
+
+      /* 出生點 */
+      &.spawn::after,
+      &.spawn-preview::after {
+        content: "💫";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: grid;
+        place-content: center;
+        font-size: 2rem;
+      }
+      &.spawn-preview {
+        opacity: 0.5;
+
+        &.taken::after {
+          background-color: tomato;
+        }
+      }
+
+      /* 斜坡 */
       &.sloped,
       &.sloped-preview {
         border-color: transparent #333 #333 transparent;
