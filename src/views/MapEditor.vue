@@ -3,24 +3,15 @@ import { onMounted, onUnmounted, ref, computed } from "vue";
 
 const currentLevel = ref(1);
 
-const tools = [
-  "Spawn Point",
-  "Star",
-  "Base Block",
-  "Jump Sprint",
-  "Sloped Block",
-  "Moving Platform",
-  "Remove Tool",
-];
-
-const toolClassesMap = {
-  "Spawn Point": "spawn",
-  Star: "star",
-  "Base Block": "base",
-  "Jump Sprint": "jump",
-  "Sloped Block": "sloped",
-  "Moving Platform": "moving",
-};
+const tools = Object.freeze({
+  spawn: "Spawn Point",
+  star: "Star",
+  base: "Base Block",
+  jump: "Jump Sprint",
+  sloped: "Sloped Block",
+  moving: "Moving Platform",
+  remove: "Remove Tool",
+});
 
 const selectedTool = ref(null);
 
@@ -36,11 +27,8 @@ const mapData = ref(initMapData());
 function blockClass(x, y) {
   const cs = [];
 
-  // 已經放置在 map 上的 block 的 class
-  const placedBlockClass = toolClassesMap[mapData.value[x][y]];
-
-  // 如果有設置 tool
-  placedBlockClass && cs.push(placedBlockClass);
+  // 如果已放置 block
+  cs.push({ [mapData.value[x][y]]: !!mapData.value[x][y] });
 
   // 如果選中了某個 tool 準備放置
   if (selectedTool.value && currentPoint.value) {
@@ -53,13 +41,15 @@ function blockClass(x, y) {
       }
     } else if (x == cx && y == cy) {
       // 鼠標 hover 時顯示 preview
-      const hoverClass = toolClassesMap[selectedTool.value];
-      hoverClass && cs.push(`${hoverClass}-preview`);
+      if (selectedTool.value && selectedTool.value !== "remove") {
+        cs.push(`${selectedTool.value}-preview`);
+      }
     }
   }
 
-  // just for all taken blocks
-  if (isTaken(x, y)) cs.push("taken");
+  // 如果已被佔用
+  // 可以優化
+  if (!available(x, y)) cs.push("taken");
 
   return cs;
 }
@@ -102,8 +92,24 @@ const draggingPath = computed(() => {
   return [];
 });
 
-function isTaken(x, y) {
-  return !!mapData.value[x][y];
+function available(x, y) {
+  if (mapData.value[x][y]) return false;
+
+  // 右側是斜坡不能放東西
+  if (mapData.value[x + 1]?.[y] === "sloped" && selectedTool.value !== "star") {
+    return false;
+  }
+
+  // 左側不是星星不能放斜坡
+  if (
+    mapData.value[x - 1]?.[y] &&
+    mapData.value[x - 1]?.[y] !== "star" &&
+    selectedTool.value === "sloped"
+  ) {
+    return false;
+  }
+
+  return true;
 }
 
 function mouseDownOnBlock(x, y) {
@@ -130,11 +136,11 @@ function mouseUpOnBlock(x, y) {
     default:
       if (sameBlock) {
         // 如果在同一格 mouse down & up，就放置對應的 block
-        if (!isTaken(cx, cy)) mapData.value[cx][cy] = selectedTool.value;
+        if (available(cx, cy)) mapData.value[cx][cy] = selectedTool.value;
       } else if (dragging.value && selectedTool.value === "Base Block") {
         // 如果是在 dragging
         draggingPath.value.forEach(({ x: px, y: py }) => {
-          if (!isTaken(px, py)) mapData.value[px][py] = selectedTool.value;
+          if (available(px, py)) mapData.value[px][py] = selectedTool.value;
         });
       }
 
@@ -189,8 +195,8 @@ onUnmounted(() => {
     </header>
     <main>
       <div class="toolbox">
-        <button v-for="tool in tools" :key="tool" @click="selectedTool = tool">
-          {{ tool }}
+        <button v-for="(v, k) in tools" :key="k" @click="selectedTool = k">
+          {{ v }}
         </button>
       </div>
 
@@ -220,6 +226,9 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+* {
+  box-sizing: border-box;
+}
 .game {
   margin: 1rem 0;
 
@@ -244,18 +253,32 @@ onUnmounted(() => {
         }
       }
 
-      &.sloped::after,
-      &.sloped-preview::after {
-        content: " ";
+      &.star::after,
+      &.star-preview::after {
+        content: "⭐";
         position: absolute;
+        width: 100%;
+        height: 100%;
+        display: grid;
+        place-content: center;
+        font-size: 2rem;
+      }
+      &.star-preview {
+        opacity: 0.5;
+      }
+
+      &.sloped,
+      &.sloped-preview {
         border-color: transparent #333 #333 transparent;
         border-style: solid;
         border-width: 25px;
+        width: 0;
+        height: 0;
       }
       &.sloped-preview {
         opacity: 0.5;
 
-        &.taken::after {
+        &.taken {
           border-color: transparent tomato tomato transparent;
         }
       }
