@@ -25,12 +25,12 @@ function initMapData() {
   return [...Array(h)].map(() => Array(w));
 }
 
-const gameData = [...Array(LEVELS)].map(() => initMapData());
+const gameData = ref([...Array(LEVELS)].map(() => initMapData()));
 
-const mapData = ref(gameData[currentLevel.value]);
+const mapData = ref(gameData.value[currentLevel.value]);
 
 watch(currentLevel, () => {
-  mapData.value = gameData[currentLevel.value];
+  mapData.value = gameData.value[currentLevel.value];
 });
 
 function blockClass(x, y) {
@@ -257,6 +257,40 @@ function toHome() {
 
   router.push({ path: "/" });
 }
+
+function exportData() {
+  const jsonStr = JSON.stringify(gameData.value);
+  const blob = new Blob([jsonStr], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "game.json"; // 檔名
+  a.click();
+}
+
+function importData() {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = ".json";
+
+  input.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const data = JSON.parse(e.target.result); // 將文件內容轉換為物件
+      console.log(data);
+
+      // ugly dirty fix
+      gameData.value = data;
+      currentLevel.value = 0;
+      mapData.value = gameData.value[currentLevel.value];
+    };
+
+    reader.readAsText(file); // 讀取文件內容
+  });
+
+  input.click();
+}
 </script>
 <template>
   <div class="map-editor">
@@ -302,11 +336,16 @@ function toHome() {
     <footer>
       <button @click="toHome">Home</button>
       <button>Play Demo</button>
-      {{ selectedTool }}
-      {{ startPoint }}
-      {{ currentPoint }}
-      {{ dragging }}
-      {{ draggingPath }}
+
+      <button @click="exportData">Export</button>
+      <button @click="importData">Import</button>
+      <div>
+        {{ selectedTool }}
+        {{ startPoint }}
+        {{ currentPoint }}
+        {{ dragging }}
+        {{ draggingPath }}
+      </div>
     </footer>
   </div>
 </template>
