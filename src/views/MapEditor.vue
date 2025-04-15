@@ -1,5 +1,6 @@
 <script setup>
 import { onMounted, onUnmounted, ref, computed, watch } from "vue";
+import { useRouter } from "vue-router";
 
 const LEVELS = 3;
 
@@ -249,6 +250,13 @@ onUnmounted(() => {
 
   document.removeEventListener("keydown", keyDown);
 });
+
+const router = useRouter();
+function toHome() {
+  if (!confirm("Map changes are not saved.Doyou want to return?")) return;
+
+  router.push({ path: "/" });
+}
 </script>
 <template>
   <div class="map-editor">
@@ -292,6 +300,7 @@ onUnmounted(() => {
       </div>
     </main>
     <footer>
+      <button @click="toHome">Home</button>
       <button>Play Demo</button>
       {{ selectedTool }}
       {{ startPoint }}
