@@ -1,7 +1,9 @@
 <script setup>
-import { onMounted, onUnmounted, ref, computed } from "vue";
+import { onMounted, onUnmounted, ref, computed, watch } from "vue";
 
-const currentLevel = ref(1);
+const LEVELS = 3;
+
+const currentLevel = ref(0);
 
 const tools = Object.freeze({
   spawn: "Spawn Point",
@@ -22,7 +24,13 @@ function initMapData() {
   return [...Array(h)].map(() => Array(w));
 }
 
-const mapData = ref(initMapData());
+const gameData = [...Array(LEVELS)].map(() => initMapData());
+
+const mapData = ref(gameData[currentLevel.value]);
+
+watch(currentLevel, () => {
+  mapData.value = gameData[currentLevel.value];
+});
 
 function blockClass(x, y) {
   const cs = [];
@@ -252,7 +260,7 @@ onUnmounted(() => {
 
       <div class="level-selector">
         <button
-          v-for="i in 3"
+          v-for="(_, i) in LEVELS"
           :key="i"
           :class="{ active: currentLevel === i }"
           @click="currentLevel = i"
