@@ -159,8 +159,21 @@ function mouseUpOnBlock(x, y) {
   const sameBlock = sx === cx && sy === cy;
 
   switch (selectedTool.value) {
-    case "Remove Tool":
-      if (sameBlock) mapData.value[cx][cy] = null;
+    case "remove":
+      if (!sameBlock) break;
+
+      if (mapData.value[cx][cy] === "moving") {
+        mapData.value[cx - 1][cy] = null;
+        mapData.value[cx + 1][cy] = null;
+      }
+
+      if (mapData.value[cx][cy] === "moving-y") {
+        mapData.value[cx][cy - 1] = null;
+        mapData.value[cx][cy + 1] = null;
+      }
+
+      mapData.value[cx][cy] = null;
+
       break;
 
     default:
