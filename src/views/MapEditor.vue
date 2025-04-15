@@ -1,21 +1,104 @@
 <script setup>
-import { ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 
 const currentLevel = ref(1);
 
 const tools = [
-  { label: "Spawn Point" },
-  { label: "Star" },
-  { label: "Base Block" },
-  { label: "Jump Sprint" },
-  { label: "Sloped Block" },
-  { label: "Moving Platform" },
-  { label: "Remove Tool" },
+  "Spawn Point",
+  "Star",
+  "Base Block",
+  "Jump Sprint",
+  "Sloped Block",
+  "Moving Platform",
+  "Remove Tool",
 ];
+
+const toolClassesMap = {
+  "Spawn Point": "spawn",
+  Star: "star",
+  "Base Block": "base",
+  "Jump Sprint": "jump",
+  "Sloped Block": "sloped",
+  "Moving Platform": "moving",
+};
 
 const selectedTool = ref(null);
 
 const mapSize = ref({ w: 10, h: 10 });
+
+function initMapData() {
+  const { w, h } = mapSize.value;
+  return [...Array(h)].map(() => Array(w));
+}
+
+const mapData = ref(initMapData());
+
+function blockClass(x, y) {
+  const cs = [];
+
+  const toolClass = toolClassesMap[mapData.value[x][y]];
+
+  // 如果有設置 tool
+  toolClass && cs.push(toolClass);
+
+  return cs;
+}
+
+// 鼠標點下去的起始 block position
+const startPoint = ref(null);
+
+// 鼠標移動的當前 block position
+const currentPoint = ref(null);
+
+// 是否在 dragging （左鍵按下不放）
+const dragging = ref(false);
+
+function mouseDownOnBlock(x, y) {
+  startPoint.value = { x, y };
+  dragging.value = true;
+}
+
+function mouseoverOnBlock(x, y) {
+  currentPoint.value = { x, y };
+}
+
+function mouseUpOnBlock(x, y) {
+  const { x: sx, y: sy } = startPoint.value;
+  const { x: cx, y: cy } = currentPoint.value;
+
+  const sameBlock = sx === cx && sy === cy;
+
+  switch (selectedTool.value) {
+    case "Remove Tool":
+      if (sameBlock) mapData.value[cx][cy] = null;
+      break;
+
+    default:
+      if (sameBlock) {
+        mapData.value[cx][cy] = selectedTool.value;
+      }
+      break;
+  }
+}
+
+function mouseMove(e) {}
+
+function mouseDownOnScreen(x, y) {}
+function mouseUpOnScreen(e) {
+  dragging.value = false;
+}
+
+onMounted(() => {
+  document.addEventListener("mousedown", mouseDownOnScreen);
+  document.addEventListener("mousemove", mouseMove);
+  document.addEventListener("mouseup", mouseUpOnScreen);
+});
+
+onUnmounted(() => {
+  document.removeEventListener("mousedown", mouseDownOnScreen);
+  document.removeEventListener("mousemove", mouseMove);
+  document.removeEventListener("mouseup", mouseUpOnScreen);
+});
 </script>
 <template>
   <div class="map-editor">
@@ -39,13 +122,21 @@ const mapSize = ref({ w: 10, h: 10 });
     <main>
       <div class="toolbox">
         <button v-for="tool in tools" :key="tool" @click="selectedTool = tool">
-          {{ tool.label }}
+          {{ tool }}
         </button>
       </div>
 
       <div class="game">
-        <div v-for="y in mapSize.h" :id="y" class="row">
-          <div v-for="x in mapSize.w" :id="x" class="block"></div>
+        <div v-for="(_, y) in mapSize.h" :id="y" class="row">
+          <div
+            v-for="(_, x) in mapSize.w"
+            class="block"
+            :key="x"
+            :class="blockClass(x, y)"
+            @mousedown.left="mouseDownOnBlock(x, y)"
+            @mouseover.left="mouseoverOnBlock(x, y)"
+            @mouseup.left="mouseUpOnBlock(x, y)"
+          ></div>
         </div>
       </div>
     </main>
@@ -58,12 +149,18 @@ const mapSize = ref({ w: 10, h: 10 });
 <style scoped>
 .game {
   margin: 1rem 0;
+
   .row {
     display: flex;
+
     .block {
       width: 50px;
       height: 50px;
       border: 1px solid #ccc;
+
+      &.base {
+        background: #ccc;
+      }
     }
   }
 }
