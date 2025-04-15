@@ -92,10 +92,11 @@ const draggingPath = computed(() => {
   return [];
 });
 
+// cell 是否能夠放置當前的 tool
 function available(x, y) {
   if (mapData.value[x][y]) return false;
 
-  // 右側是斜坡不能放東西
+  // 右側是斜坡不能放除了星星之外的東西
   if (mapData.value[x + 1]?.[y] === "sloped" && selectedTool.value !== "star") {
     return false;
   }
@@ -105,6 +106,31 @@ function available(x, y) {
     mapData.value[x - 1]?.[y] &&
     mapData.value[x - 1]?.[y] !== "star" &&
     selectedTool.value === "sloped"
+  ) {
+    return false;
+  }
+
+  // 左側或者右側是 moving 不能放
+  if (
+    mapData.value[x - 1]?.[y] === "moving" ||
+    mapData.value[x + 1]?.[y] === "moving"
+  ) {
+    return false;
+  }
+
+  // 左側或者右側是 moving 不能放
+  if (
+    selectedTool.value === "moving" &&
+    (mapData.value[x - 2]?.[y] === "moving" ||
+      mapData.value[x + 2]?.[y] === "moving")
+  ) {
+    return false;
+  }
+
+  //左右邊界不能放 moving
+  if (
+    selectedTool.value === "moving" &&
+    (x === 0 || x === mapSize.value.w - 1)
   ) {
     return false;
   }
@@ -135,10 +161,10 @@ function mouseUpOnBlock(x, y) {
 
     default:
       if (sameBlock) {
-        // 如果在同一格 mouse down & up，就放置對應的 block
+        // 在同一格 mouse down & up，就放置對應的 block
         if (available(cx, cy)) mapData.value[cx][cy] = selectedTool.value;
       } else if (dragging.value && selectedTool.value === "Base Block") {
-        // 如果是在 dragging
+        // 是在 dragging
         draggingPath.value.forEach(({ x: px, y: py }) => {
           if (available(px, py)) mapData.value[px][py] = selectedTool.value;
         });
@@ -280,6 +306,33 @@ onUnmounted(() => {
 
         &.taken {
           border-color: transparent tomato tomato transparent;
+        }
+      }
+
+      /* 移動平台 */
+      &.moving,
+      &.moving-preview {
+        background-color: #ccc;
+
+        &::before,
+        &::after {
+          content: "";
+          background: #ccc;
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          transform: translateX(-100%);
+        }
+
+        &::after {
+          transform: translateX(100%);
+        }
+      }
+      &.moving-preview {
+        opacity: 0.5;
+
+        &.taken {
+          border-color: tomato transparent transparent transparent;
         }
       }
     }
