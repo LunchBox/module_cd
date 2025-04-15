@@ -110,6 +110,7 @@ function mouseoverOnBlock(x, y) {
   currentPoint.value = { x, y };
 }
 
+// 在 block 上 mouse up，通常用來 place blocks
 function mouseUpOnBlock(x, y) {
   const { x: sx, y: sy } = startPoint.value;
   const { x: cx, y: cy } = currentPoint.value;
@@ -125,8 +126,11 @@ function mouseUpOnBlock(x, y) {
       if (sameBlock) {
         // 如果在同一格 mouse down & up，就放置對應的 block
         mapData.value[cx][cy] = selectedTool.value;
-      } else if (dragging.value) {
+      } else if (dragging.value && selectedTool.value === "Base Block") {
         // 如果是在 dragging
+        draggingPath.value.forEach(({ x: px, y: py }) => {
+          mapData.value[px][py] = selectedTool.value;
+        });
       }
 
       break;
