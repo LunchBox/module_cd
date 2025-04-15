@@ -143,6 +143,11 @@ function mouseDownOnScreen(x, y) {}
 function mouseUpOnScreen(e) {
   startPoint.value = null;
   dragging.value = false;
+
+  // 取消 tool
+  if (e.button === 2) {
+    selectedTool.value = null;
+  }
 }
 
 onMounted(() => {
@@ -183,7 +188,7 @@ onUnmounted(() => {
         </button>
       </div>
 
-      <div class="game">
+      <div class="game" @contextmenu.prevent>
         <div v-for="(_, y) in mapSize.h" :id="y" class="row">
           <div
             v-for="(_, x) in mapSize.w"
