@@ -42,23 +42,24 @@ function blockClass(x, y) {
   // 如果有設置 tool
   placedBlockClass && cs.push(placedBlockClass);
 
-  if (currentPoint.value) {
+  // 如果選中了某個 tool 準備放置
+  if (selectedTool.value && currentPoint.value) {
     const { x: cx, y: cy } = currentPoint.value;
 
-    if (dragging.value) {
+    if (dragging.value && draggingPath.value) {
       // 如果當前 block 在 draggingPath 中，顯示 preview
-      if (
-        draggingPath.value &&
-        draggingPath.value.some(({ x: dx, y: dy }) => dx === x && dy === y)
-      ) {
+      if (draggingPath.value.some(({ x: dx, y: dy }) => dx === x && dy === y)) {
         cs.push(`base-preview`);
       }
-    } else if (selectedTool.value && x == cx && y == cy) {
+    } else if (x == cx && y == cy) {
       // 鼠標 hover 時顯示 preview
       const hoverClass = toolClassesMap[selectedTool.value];
       hoverClass && cs.push(`${hoverClass}-preview`);
     }
   }
+
+  // just for all taken blocks
+  if (isTaken(x, y)) cs.push("taken");
 
   return cs;
 }
@@ -81,7 +82,7 @@ const draggingPath = computed(() => {
     const { x: cx, y: cy } = currentPoint.value;
 
     // 必須是同一行或者同一列
-    if (sx !== cx && sy !== cy) return;
+    if (sx !== cx && sy !== cy) return [];
 
     const xDiff = sx > cx ? -1 : 1;
     const xs = [...Array(Math.abs(sx - cx) + 1)].map((_, i) => sx + i * xDiff);
@@ -100,6 +101,10 @@ const draggingPath = computed(() => {
 
   return [];
 });
+
+function isTaken(x, y) {
+  return !!mapData.value[x][y];
+}
 
 function mouseDownOnBlock(x, y) {
   startPoint.value = { x, y };
@@ -125,11 +130,11 @@ function mouseUpOnBlock(x, y) {
     default:
       if (sameBlock) {
         // 如果在同一格 mouse down & up，就放置對應的 block
-        mapData.value[cx][cy] = selectedTool.value;
+        if (!isTaken(cx, cy)) mapData.value[cx][cy] = selectedTool.value;
       } else if (dragging.value && selectedTool.value === "Base Block") {
         // 如果是在 dragging
         draggingPath.value.forEach(({ x: px, y: py }) => {
-          mapData.value[px][py] = selectedTool.value;
+          if (!isTaken(px, py)) mapData.value[px][py] = selectedTool.value;
         });
       }
 
@@ -233,10 +238,14 @@ onUnmounted(() => {
       }
       &.base-preview {
         opacity: 0.5;
+
+        &.taken {
+          background: tomato;
+        }
       }
 
-      &.sloped::before,
-      &.sloped-preview::before {
+      &.sloped::after,
+      &.sloped-preview::after {
         content: " ";
         position: absolute;
         border-color: transparent #333 #333 transparent;
@@ -245,6 +254,10 @@ onUnmounted(() => {
       }
       &.sloped-preview {
         opacity: 0.5;
+
+        &.taken::after {
+          border-color: transparent tomato tomato transparent;
+        }
       }
     }
   }
