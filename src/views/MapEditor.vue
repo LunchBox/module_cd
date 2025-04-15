@@ -139,7 +139,8 @@ function mouseUpOnBlock(x, y) {
 
 function mouseMove(e) {}
 
-function mouseDownOnScreen(x, y) {}
+function mouseDownOnScreen(e) {}
+
 function mouseUpOnScreen(e) {
   startPoint.value = null;
   dragging.value = false;
@@ -224,12 +225,26 @@ onUnmounted(() => {
       width: 50px;
       height: 50px;
       border: 1px solid #ccc;
+      position: relative;
 
-      &.base {
-        background: #ccc;
+      &.base,
+      &.base-preview {
+        background: #333;
       }
       &.base-preview {
-        background: #eee;
+        opacity: 0.5;
+      }
+
+      &.sloped::before,
+      &.sloped-preview::before {
+        content: " ";
+        position: absolute;
+        border-color: transparent #333 #333 transparent;
+        border-style: solid;
+        border-width: 25px;
+      }
+      &.sloped-preview {
+        opacity: 0.5;
       }
     }
   }
