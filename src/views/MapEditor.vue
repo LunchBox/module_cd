@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref, computed } from "vue";
 
 const currentLevel = ref(1);
 
@@ -36,10 +36,29 @@ const mapData = ref(initMapData());
 function blockClass(x, y) {
   const cs = [];
 
-  const toolClass = toolClassesMap[mapData.value[x][y]];
+  // 已經放置在 map 上的 block 的 class
+  const placedBlockClass = toolClassesMap[mapData.value[x][y]];
 
   // 如果有設置 tool
-  toolClass && cs.push(toolClass);
+  placedBlockClass && cs.push(placedBlockClass);
+
+  if (currentPoint.value) {
+    const { x: cx, y: cy } = currentPoint.value;
+
+    if (dragging.value) {
+      // 如果當前 block 在 draggingPath 中，顯示 preview
+      if (
+        draggingPath.value &&
+        draggingPath.value.some(({ x: dx, y: dy }) => dx === x && dy === y)
+      ) {
+        cs.push(`base-preview`);
+      }
+    } else if (selectedTool.value && x == cx && y == cy) {
+      // 鼠標 hover 時顯示 preview
+      const hoverClass = toolClassesMap[selectedTool.value];
+      hoverClass && cs.push(`${hoverClass}-preview`);
+    }
+  }
 
   return cs;
 }
@@ -52,6 +71,35 @@ const currentPoint = ref(null);
 
 // 是否在 dragging （左鍵按下不放）
 const dragging = ref(false);
+
+// 正在拖拽中的 blocks
+const draggingPath = computed(() => {
+  if (!dragging.value) return [];
+
+  if (selectedTool.value === "Base Block") {
+    const { x: sx, y: sy } = startPoint.value;
+    const { x: cx, y: cy } = currentPoint.value;
+
+    // 必須是同一行或者同一列
+    if (sx !== cx && sy !== cy) return;
+
+    const xDiff = sx > cx ? -1 : 1;
+    const xs = [...Array(Math.abs(sx - cx) + 1)].map((_, i) => sx + i * xDiff);
+
+    const yDiff = sy > cy ? -1 : 1;
+    const ys = [...Array(Math.abs(sy - cy) + 1)].map((_, i) => sy + i * yDiff);
+
+    return xs
+      .map((x) =>
+        ys.map((y) => {
+          return { x, y };
+        })
+      )
+      .flat();
+  }
+
+  return [];
+});
 
 function mouseDownOnBlock(x, y) {
   startPoint.value = { x, y };
@@ -75,8 +123,12 @@ function mouseUpOnBlock(x, y) {
 
     default:
       if (sameBlock) {
+        // 如果在同一格 mouse down & up，就放置對應的 block
         mapData.value[cx][cy] = selectedTool.value;
+      } else if (dragging.value) {
+        // 如果是在 dragging
       }
+
       break;
   }
 }
@@ -85,6 +137,7 @@ function mouseMove(e) {}
 
 function mouseDownOnScreen(x, y) {}
 function mouseUpOnScreen(e) {
+  startPoint.value = null;
   dragging.value = false;
 }
 
@@ -133,8 +186,9 @@ onUnmounted(() => {
             class="block"
             :key="x"
             :class="blockClass(x, y)"
+            @dragstart.prevent
             @mousedown.left="mouseDownOnBlock(x, y)"
-            @mouseover.left="mouseoverOnBlock(x, y)"
+            @mouseover="mouseoverOnBlock(x, y)"
             @mouseup.left="mouseUpOnBlock(x, y)"
           ></div>
         </div>
@@ -142,6 +196,10 @@ onUnmounted(() => {
     </main>
     <footer>
       <button>Play Demo</button>
+      {{ startPoint }}
+      {{ currentPoint }}
+      {{ dragging }}
+      {{ draggingPath }}
     </footer>
   </div>
 </template>
@@ -160,6 +218,9 @@ onUnmounted(() => {
 
       &.base {
         background: #ccc;
+      }
+      &.base-preview {
+        background: #eee;
       }
     }
   }
