@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 
 import { CELL_SIZE } from "./config";
 
@@ -16,19 +16,21 @@ function render() {
   requestAnimationFrame(render);
 }
 
+const wrapperStyle = computed(() => {
+  return { left: `-${CELL_SIZE}px`, right: `-${CELL_SIZE}px` };
+});
+
+const blockStyle = computed(() => {
+  return { left: `${0 + pos.value}px`, width: `${CELL_SIZE}px` };
+});
+
 onMounted(() => {
   render();
 });
 </script>
 <template>
-  <div
-    class="moving-wrapper"
-    :style="{ left: `-${CELL_SIZE}px`, right: `-${CELL_SIZE}px` }"
-  >
-    <div
-      class="moving-block"
-      :style="{ left: `${0 + pos}px`, width: `${CELL_SIZE}px` }"
-    ></div>
+  <div class="moving-wrapper" :style="wrapperStyle">
+    <div class="moving-block" :style="blockStyle"></div>
   </div>
 </template>
 
