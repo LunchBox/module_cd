@@ -25,6 +25,8 @@ const tools = Object.freeze({
   remove: "Remove Tool",
 });
 
+import { placeBlock, removeBlock } from "./blockTools";
+
 const router = useRouter();
 function toHome() {
   if (!confirm("Map changes are not saved.Doyou want to return?")) return;
@@ -53,7 +55,7 @@ function blockClass(x, y) {
   const cs = [];
 
   // 如果已放置 block
-  cs.push({ [mapData.value[x][y]]: !!mapData.value[x][y] });
+  cs.push({ [mapData.value[x][y]?.type]: !!mapData.value[x][y] });
 
   // 如果選中了某個 tool 準備放置
   if (selectedTool.value && currentPoint.value) {
@@ -188,50 +190,21 @@ function mouseUpOnBlock(x, y) {
   switch (selectedTool.value) {
     case "remove":
       if (!sameBlock) break;
-
-      if (selectedTool.value === "sloped") {
-        mapData.value[cx - 1][cy] = null;
-      }
-
-      if (mapData.value[cx][cy] === "moving") {
-        mapData.value[cx - 1][cy] = null;
-        mapData.value[cx + 1][cy] = null;
-      }
-
-      if (mapData.value[cx][cy] === "moving-y") {
-        mapData.value[cx][cy - 1] = null;
-        mapData.value[cx][cy + 1] = null;
-      }
-
-      mapData.value[cx][cy] = null;
-
+      removeBlock(mapData.value, cx, cy);
       break;
 
     default:
       if (sameBlock) {
         // 在同一格 mouse down & up，就放置對應的 block
         if (available(cx, cy)) {
-          mapData.value[cx][cy] = selectedTool.value;
-
-          if (selectedTool.value === "sloped") {
-            mapData.value[cx - 1][cy] = "sloped-left";
-          }
-
-          // 標記 moving platform
-          if (selectedTool.value === "moving") {
-            mapData.value[cx - 1][cy] = "moving-left";
-            mapData.value[cx + 1][cy] = "moving-right";
-          }
-
-          if (selectedTool.value === "moving-y") {
-            mapData.value[cx][cy - 1] = "moving-top";
-            mapData.value[cx][cy + 1] = "moving-down";
-          }
+          placeBlock(mapData.value, selectedTool.value, cx, cy);
         }
       } else if (dragging.value && selectedTool.value === "base") {
         // 是在 dragging
         draggingPath.value.forEach(({ x: px, y: py }) => {
-          if (available(px, py)) mapData.value[px][py] = selectedTool.value;
+          if (available(px, py)) {
+            placeBlock(mapData.value, selectedTool.value, px, py);
+          }
         });
       }
 
