@@ -17,10 +17,15 @@ export const spawnPoint = computed(() => {
 // player 工廠
 export function manufacturePlayer() {
   player.value = {
-    position: spawnPoint.value,
+    position: { ...spawnPoint.value },
     shape: { w: 50, h: 50 },
     speed: { x: 0, y: 0 },
   };
+}
+
+// 限制數值範圍
+function minMax(val, min, max) {
+  return Math.max(Math.min(val, max), min);
 }
 
 function move() {
@@ -35,6 +40,7 @@ function move() {
 
   // gravity
   player.value.speed.y += 9.8 / 100;
+  player.value.speed.y = minMax(player.value.speed.y, -10, 10);
 }
 
 const XG = 1;
@@ -42,25 +48,34 @@ const XG = 1;
 function moveLeft(e) {
   startGame();
 
-  // 速度
+  // 轉頭
+  if (player.value.speed.x > 0) player.value.speed.x = 0;
+
+  // 加速
   player.value.speed.x += -XG;
-  player.value.speed.x = Math.max(player.value.speed.x, -5); // limit
+  player.value.speed.x = minMax(player.value.speed.x, -5, 5);
 }
 
 // TODO: 和上面重複了，可以優化
 function moveRight(e) {
   startGame();
 
-  // 速度
+  if (player.value.speed.x < 0) player.value.speed.x = 0;
+
   player.value.speed.x += XG;
-  player.value.speed.x = Math.min(player.value.speed.x, 5); // limit
+  player.value.speed.x = minMax(player.value.speed.x, -5, 5);
 }
 
+let jumped = false;
 function jump(e) {
   startGame();
 
-  player.value.speed.y += -XG;
-  player.value.speed.y = Math.min(player.value.speed.y, 5); // limit
+  if (!jumped) {
+    player.value.speed.y += -3;
+    player.value.speed.y = minMax(player.value.speed.y, -10, 10);
+
+    jumped = true;
+  }
 }
 
 function render() {
@@ -91,12 +106,18 @@ function keydown(e) {
   }
 }
 
+function keyup(e) {
+  jumped = false;
+}
+
 export function initGame() {
   onMounted(() => {
     document.addEventListener("keydown", keydown);
+    document.addEventListener("keyup", keyup);
   });
 
   onUnmounted(() => {
     document.removeEventListener("keydown", keydown);
+    document.removeEventListener("keyup", keyup);
   });
 }

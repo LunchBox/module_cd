@@ -41,8 +41,8 @@ onMounted(() => {
         <MapGrid></MapGrid>
         <div v-if="player" class="player" :style="playerStyle"></div>
       </div>
-      {{ player }}
-      {{ playerStyle }}
+      {{ player }} <br />
+      {{ playerStyle }} <br />
       sp:
       {{ spawnPoint }}
     </div>
