@@ -29,7 +29,10 @@ function blockClass(x, y) {
           @mouseover="$emit('mouseover-on-block', x, y)"
           @mouseup.left="$emit('mouseup-on-block', x, y)"
         >
-          <MovingPlatform v-if="mapData[x][y] === 'moving'"></MovingPlatform>
+          <MovingPlatform
+            v-if="mapData[x][y]?.type === 'moving'"
+            :data="mapData[x][y]"
+          ></MovingPlatform>
         </div>
       </template>
     </div>

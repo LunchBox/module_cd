@@ -17,7 +17,7 @@ import useEventListener from "./useEventListener";
 const MOVING_RATE = 3;
 
 // 跳躍的瞬間加速
-const JUMPING_RATE = 3;
+const JUMPING_RATE = 8;
 
 // 應為要移除星星，克隆一份
 const mapData = ref(JSON.parse(JSON.stringify(originalMapData.value)));
@@ -99,7 +99,7 @@ function move() {
     player.value.speed.x = 0;
   }
 
-  // 分開 xy verify
+  // 分開 xy verifya
   const pendingY = player.value.position.y + speedY;
   if (!checkBlocked({ x, y: pendingY, w, h })) {
     player.value.position.y += speedY;
@@ -108,7 +108,7 @@ function move() {
   }
 
   // gravity
-  player.value.speed.y += 9.8 / 100;
+  player.value.speed.y += 9.8 / 20;
   player.value.speed.y = minMax(player.value.speed.y, -10, 10);
 }
 

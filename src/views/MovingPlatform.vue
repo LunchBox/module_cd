@@ -3,16 +3,16 @@ import { ref, computed, onMounted } from "vue";
 
 import { CELL_SIZE } from "./config";
 
-const pos = ref(0);
+const props = defineProps(["data"]);
 
 const moving_rate = 1;
 let diff = moving_rate;
 
 function render() {
-  pos.value += diff;
+  props.data.offset += diff;
 
-  if (pos.value >= CELL_SIZE * 2) diff = -moving_rate;
-  if (pos.value <= 0) diff = moving_rate;
+  if (props.data.offset >= CELL_SIZE * 2) diff = -moving_rate;
+  if (props.data.offset <= 0) diff = moving_rate;
   requestAnimationFrame(render);
 }
 
@@ -21,7 +21,7 @@ const wrapperStyle = computed(() => {
 });
 
 const blockStyle = computed(() => {
-  return { left: `${0 + pos.value}px`, width: `${CELL_SIZE}px` };
+  return { left: `${0 + props.data.offset}px`, width: `${CELL_SIZE}px` };
 });
 
 onMounted(() => {
