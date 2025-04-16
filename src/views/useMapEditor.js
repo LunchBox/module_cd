@@ -32,24 +32,28 @@ export function exportData() {
   a.click();
 }
 
-export function importData() {
-  const input = document.createElement("input");
-  input.type = "file";
-  input.accept = ".json";
+export async function importData() {
+  return new Promise((resolve) => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".json";
 
-  input.addEventListener("change", (event) => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
+    input.addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      const reader = new FileReader();
 
-    reader.onload = (e) => {
-      const data = JSON.parse(e.target.result); // 將文件內容轉換為物件
+      reader.onload = (e) => {
+        const data = JSON.parse(e.target.result); // 將文件內容轉換為物件
 
-      gameData.value = data;
-      currentLevel.value = 0;
-    };
+        gameData.value = data;
+        currentLevel.value = 0;
 
-    reader.readAsText(file); // 讀取文件內容
+        resolve();
+      };
+
+      reader.readAsText(file); // 讀取文件內容
+    });
+
+    input.click();
   });
-
-  input.click();
 }
