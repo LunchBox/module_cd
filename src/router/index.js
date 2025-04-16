@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
 import MapEditor from "@/views/MapEditor.vue";
+import GameDemo from "@/views/GameDemo.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,6 +12,7 @@ const router = createRouter({
       component: HomeView,
     },
     { path: "/editor", component: MapEditor },
+    { path: "/demo", component: GameDemo },
     {
       path: "/about",
       name: "about",

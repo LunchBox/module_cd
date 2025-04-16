@@ -88,7 +88,6 @@ function importData() {
       </div>
 
       <MapGrid
-        :level="currentLevel"
         @mousedown-on-block="mouseDownOnBlock"
         @mouseover-on-block="mouseOverOnBlock"
         @mouseup-on-block="mouseUpOnBlock"
@@ -96,7 +95,8 @@ function importData() {
     </main>
     <footer>
       <button @click="toHome">Home</button>
-      <button>Play Demo</button>
+
+      <button @click="$router.push('/demo')">Play Demo</button>
 
       <button @click="exportData">Export</button>
       <button @click="importData">Import</button>

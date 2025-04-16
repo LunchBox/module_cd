@@ -140,6 +140,8 @@ function available(x, y) {
   return true;
 }
 
+// ---------------------------------- Events --------------------------------------
+
 export function mouseDownOnBlock(x, y) {
   startPoint.value = { x, y };
   dragging.value = true;

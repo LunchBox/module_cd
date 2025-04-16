@@ -1,7 +1,6 @@
 <script setup>
 import { blockClass, mapSize } from "./useMapEditor";
 
-const props = defineProps(["level"]);
 const emits = defineEmits([
   "mousedown-on-block",
   "mouseover-on-block",
