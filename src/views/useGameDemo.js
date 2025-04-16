@@ -1,30 +1,27 @@
 import { ref, computed, onMounted, onUnmounted } from "vue";
-import { mapData } from "./useMapEditor";
+import { CELL_SIZE, mapData } from "./useMapEditor";
 
 export const player = ref(null);
 export const start = ref(false);
 
-const spawnPoint = computed(() => {
+export const spawnPoint = computed(() => {
   const point = { x: 0, y: 0 };
   mapData.value.forEach((rows, x) =>
     rows.forEach((cell, y) => {
-      [point.x, point.y] = [x, y];
+      if (cell === "spawn") [point.x, point.y] = [x * CELL_SIZE, y * CELL_SIZE];
     })
   );
   return point;
 });
 
 // player 工廠
-function manufacturePlayer() {
+export function manufacturePlayer() {
   player.value = {
     position: spawnPoint.value,
     shape: { w: 50, h: 50 },
     speed: { x: 0, y: 0 },
   };
 }
-
-// 初始化一個 player
-manufacturePlayer();
 
 function move() {
   const { x: speedX, y: speedY } = player.value.speed;
@@ -34,6 +31,10 @@ function move() {
 
   // TODO: 判斷目標地點能否移動
   player.value.position.x += speedX;
+  player.value.position.y += speedY;
+
+  // gravity
+  player.value.speed.y += 9.8 / 100;
 }
 
 const XG = 1;
@@ -53,6 +54,13 @@ function moveRight(e) {
   // 速度
   player.value.speed.x += XG;
   player.value.speed.x = Math.min(player.value.speed.x, 5); // limit
+}
+
+function jump(e) {
+  startGame();
+
+  player.value.speed.y += -XG;
+  player.value.speed.y = Math.min(player.value.speed.y, 5); // limit
 }
 
 function render() {
@@ -76,6 +84,9 @@ function keydown(e) {
       break;
     case "d":
       moveRight();
+      break;
+    case "w":
+      jump();
       break;
   }
 }

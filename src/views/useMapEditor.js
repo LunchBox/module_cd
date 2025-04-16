@@ -1,6 +1,7 @@
 import { onMounted, onUnmounted, ref, computed } from "vue";
 
 export const LEVELS = 3;
+export const CELL_SIZE = 50;
 
 export const selectedTool = ref(null);
 

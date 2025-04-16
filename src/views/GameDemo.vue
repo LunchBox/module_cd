@@ -1,20 +1,26 @@
 <script setup>
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import MapGrid from "./MapGrid.vue";
 import { currentLevel } from "./useMapEditor";
 
-import { player, initGame } from "./useGameDemo";
+import { player, initGame, manufacturePlayer, spawnPoint } from "./useGameDemo";
 
 initGame();
 
 const playerStyle = computed(() => {
+  if (!player.value) return {};
   const p = player.value;
   return {
     left: p.position.x + "px",
-    top: p.position.y + "px",
+    top: `${p.position.y}px`,
     width: p.shape.w + "px",
     height: p.shape.h + "px",
   };
+});
+
+onMounted(() => {
+  // 初始化一個 player
+  manufacturePlayer();
 });
 </script>
 
@@ -33,10 +39,12 @@ const playerStyle = computed(() => {
       </header>
       <div class="game">
         <MapGrid></MapGrid>
-        <div class="player" :style="playerStyle"></div>
+        <div v-if="player" class="player" :style="playerStyle"></div>
       </div>
       {{ player }}
       {{ playerStyle }}
+      sp:
+      {{ spawnPoint }}
     </div>
   </div>
 </template>
