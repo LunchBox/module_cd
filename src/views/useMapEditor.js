@@ -7,20 +7,19 @@ export const selectedTool = ref(null);
 
 export const mapSize = ref({ w: 10, h: 10 });
 
+export const gameData = ref([...Array(LEVELS)].map(() => initMapData()));
+
+export const mapData = computed(() => gameData.value[currentLevel.value]);
+
+export const currentLevel = ref(0);
+
 function initMapData() {
   const { w, h } = mapSize.value;
   return [...Array(h)].map(() => Array(w));
 }
 
-export const gameData = ref([...Array(LEVELS)].map(() => initMapData()));
-
-export const mapData = ref(gameData.value[0]);
-
-export const currentLevel = ref(0);
-
 export function toLevel(lv) {
   currentLevel.value = lv;
-  mapData.value = gameData.value[lv];
 }
 
 export function validMap() {

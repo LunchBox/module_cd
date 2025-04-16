@@ -2,6 +2,10 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
 import MapEditor from "@/views/MapEditor.vue";
 import GameDemo from "@/views/GameDemo.vue";
+import InstructionPage from "@/views/InstructionPage.vue";
+import MapPreviewPage from "@/views/MapPreviewPage.vue";
+import ModuleD from "@/views/ModuleD.vue";
+import RanksPage from "@/views/RanksPage.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,8 +15,12 @@ const router = createRouter({
       name: "home",
       component: HomeView,
     },
+    { path: "/instructions", component: InstructionPage },
     { path: "/editor", component: MapEditor },
     { path: "/demo", component: GameDemo },
+    { path: "/map-preview", component: MapPreviewPage },
+    { path: "/ranks", component: RanksPage },
+    { path: "/module_d", component: ModuleD },
     {
       path: "/about",
       name: "about",

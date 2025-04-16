@@ -1,11 +1,15 @@
 <script setup>
-import { blockClass, mapSize } from "./useMapEditor";
+import { blockClass, currentLevel, mapSize } from "./useMapEditor";
 
 const emits = defineEmits([
   "mousedown-on-block",
   "mouseover-on-block",
   "mouseup-on-block",
 ]);
+
+const props = defineProps(["level"]);
+
+currentLevel.value = props.level || 0;
 </script>
 <template>
   <div class="game-grid" @contextmenu.prevent>
