@@ -10,6 +10,7 @@ import {
   toLevel,
   importData,
   exportData,
+  levelAccomplished,
 } from "./useMapEditor";
 import useEventListener from "./useEventListener";
 
@@ -264,6 +265,8 @@ useEventListener(document, "keydown", keyDown);
       <h2>
         Map Editor - Level
         {{ currentLevel }}
+
+        <span v-if="levelAccomplished"> !!! Accomplished !!!</span>
       </h2>
 
       <div class="level-selector">

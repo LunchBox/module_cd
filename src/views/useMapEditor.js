@@ -13,6 +13,21 @@ export const currentLevel = ref(0);
 
 export const mapData = computed(() => gameData.value[currentLevel.value]);
 
+export const accomplishedLevels = ref(new Set());
+
+export const levelAccomplished = computed(() => {
+  return accomplishedLevels.value.has(currentLevel.value);
+});
+
+// any changes, remove the accomplished mark
+watch(
+  () => mapData,
+  () => {
+    accomplishedLevels.value.delete(currentLevel.value);
+  },
+  { deep: true }
+);
+
 function initMapData() {
   const { w, h } = mapSize.value;
   return [...Array(h)].map(() => Array(w));

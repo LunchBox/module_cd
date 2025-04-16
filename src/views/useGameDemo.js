@@ -1,7 +1,5 @@
 import { ref } from "vue";
 
-export const accomplishedLevels = ref(new Set());
-
 // 碰撞檢測
 export function intersect(a, b) {
   return (

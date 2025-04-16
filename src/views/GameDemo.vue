@@ -1,11 +1,16 @@
 <script setup>
-import { ref, computed, onMounted, cloneVNode } from "vue";
+import { ref, computed, onMounted } from "vue";
 import MapGrid from "./MapGrid.vue";
 
 import { CELL_SIZE } from "./useMapEditor";
-import { currentLevel, mapData as originalMapData } from "./useMapEditor";
+import {
+  currentLevel,
+  mapData as originalMapData,
+  accomplishedLevels,
+  levelAccomplished,
+} from "./useMapEditor";
 
-import { accomplishedLevels, intersect, minMax } from "./useGameDemo";
+import { intersect, minMax } from "./useGameDemo";
 import useEventListener from "./useEventListener";
 
 // 左右移動的瞬間加速
@@ -34,12 +39,8 @@ const spawnPoint = computed(() => {
 });
 
 const isAccomplished = computed(() => {
-  const stars = mapData.value.flat().filter((v) => v === "star").length;
+  const stars = originalMapData.value.flat().filter((v) => v === "star");
   return collectedStars.value === stars.length;
-});
-
-const levelAccomplished = computed(() => {
-  return accomplishedLevels.value.has(currentLevel.value);
 });
 
 const player = ref(manufacturePlayer(mapData));
@@ -209,6 +210,8 @@ const playerStyle = computed(() => {
         <div v-if="player" class="player" :style="playerStyle"></div>
       </div>
       Collected Stars: {{ collectedStars }} <br />
+      {{ isAccomplished }}
+      Ac Levels: {{ [...accomplishedLevels] }} <br />
       {{ player }} <br />
       {{ playerStyle }} <br />
     </div>
