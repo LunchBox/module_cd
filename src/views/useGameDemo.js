@@ -23,27 +23,76 @@ export function manufacturePlayer() {
   };
 }
 
+// 是否碰撞
+function intersect(a, b) {
+  return (
+    a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y
+  );
+}
+
+function isBlocked(shape) {
+  let coll = false;
+
+  // TODO: should find the destination blocks first
+  mapData.value.forEach((rows, tx) => {
+    rows.forEach((cell, ty) => {
+      if (!cell) return;
+      if (cell === "spawn") return;
+      if (cell === "star") return;
+
+      const collPos = {
+        x: tx * CELL_SIZE,
+        y: ty * CELL_SIZE,
+        w: CELL_SIZE,
+        h: CELL_SIZE,
+      };
+
+      if (intersect(shape, collPos)) {
+        // console.log(collPos);
+        coll = true;
+      }
+    });
+  });
+
+  return coll;
+}
+
 // 限制數值範圍
 function minMax(val, min, max) {
   return Math.max(Math.min(val, max), min);
 }
 
 function move() {
+  const { x, y } = player.value.position;
   const { x: speedX, y: speedY } = player.value.speed;
+  const { w, h } = player.value.shape;
 
-  // 預計前往的地方
-  const pendingPos = player.value.position.x + speedX;
+  // 預計前往的 x
+  const pendingX = player.value.position.x + speedX;
+  if (!isBlocked({ x: pendingX, y, w, h })) {
+    player.value.position.x += speedX;
+  } else {
+    player.value.speed.x = 0;
+  }
 
-  // TODO: 判斷目標地點能否移動
-  player.value.position.x += speedX;
-  player.value.position.y += speedY;
+  // 分開 xy verify
+  const pendingY = player.value.position.y + speedY;
+  if (!isBlocked({ x, y: pendingY, w, h })) {
+    player.value.position.y += speedY;
+  } else {
+    player.value.speed.y = 0;
+  }
 
   // gravity
   player.value.speed.y += 9.8 / 100;
   player.value.speed.y = minMax(player.value.speed.y, -10, 10);
 }
 
-const XG = 1;
+// 左右移動的瞬間加速
+const MOVING_RATE = 5;
+
+// 跳躍的瞬間加速
+const JUMPING_RATE = 5;
 
 function moveLeft(e) {
   startGame();
@@ -52,7 +101,7 @@ function moveLeft(e) {
   if (player.value.speed.x > 0) player.value.speed.x = 0;
 
   // 加速
-  player.value.speed.x += -XG;
+  player.value.speed.x += -MOVING_RATE;
   player.value.speed.x = minMax(player.value.speed.x, -5, 5);
 }
 
@@ -62,7 +111,7 @@ function moveRight(e) {
 
   if (player.value.speed.x < 0) player.value.speed.x = 0;
 
-  player.value.speed.x += XG;
+  player.value.speed.x += MOVING_RATE;
   player.value.speed.x = minMax(player.value.speed.x, -5, 5);
 }
 
@@ -71,7 +120,7 @@ function jump(e) {
   startGame();
 
   if (!jumped) {
-    player.value.speed.y += -3;
+    player.value.speed.y += -JUMPING_RATE;
     player.value.speed.y = minMax(player.value.speed.y, -10, 10);
 
     jumped = true;
@@ -91,6 +140,8 @@ function startGame() {
   start.value = true;
   render();
 }
+
+// ---- events
 
 function keydown(e) {
   switch (e.key) {
