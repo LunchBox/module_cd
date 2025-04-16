@@ -1,5 +1,5 @@
 <script setup>
-import { currentLevel, LEVELS } from "./useMapEditor";
+import { LEVELS, gameData } from "./useMapEditor";
 import MapGrid from "./MapGrid.vue";
 
 function startGame(lv) {}
@@ -7,13 +7,10 @@ function startGame(lv) {}
 <template>
   <div>
     <header>
-      <h2>
-        关卡预览区（Level Preview Area） - Level
-        {{ currentLevel }}
-      </h2>
+      <h2>关卡预览区（Level Preview Area）</h2>
     </header>
     <div class="game-preview">
-      <MapGrid v-for="(_, lv) in LEVELS" :level="lv"></MapGrid>
+      <MapGrid v-for="(_, lv) in LEVELS" :mapData="gameData[lv]"></MapGrid>
     </div>
     <button @click="startGame(lv)">Start Game</button>
     <button @click="$router.push('/ranks')">Rank</button>

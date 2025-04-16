@@ -1,5 +1,5 @@
 <script setup>
-import { blockClass, currentLevel, mapSize } from "./useMapEditor";
+import { mapSize } from "./useMapEditor";
 
 const emits = defineEmits([
   "mousedown-on-block",
@@ -7,9 +7,13 @@ const emits = defineEmits([
   "mouseup-on-block",
 ]);
 
-const props = defineProps(["level"]);
+const props = defineProps(["level", "mapData", "blockClass"]);
 
-currentLevel.value = props.level || 0;
+function blockClass(x, y) {
+  return props.blockClass instanceof Function
+    ? props.blockClass(x, y)
+    : props.mapData[x][y];
+}
 </script>
 <template>
   <div class="game-grid" @contextmenu.prevent>

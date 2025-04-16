@@ -1,7 +1,8 @@
 <script setup>
 import { computed, onMounted } from "vue";
 import MapGrid from "./MapGrid.vue";
-import { currentLevel } from "./useMapEditor";
+
+import { currentLevel, mapData } from "./useMapEditor";
 
 import { player, initGame, manufacturePlayer, spawnPoint } from "./useGameDemo";
 
@@ -38,7 +39,7 @@ onMounted(() => {
         </h2>
       </header>
       <div class="game">
-        <MapGrid></MapGrid>
+        <MapGrid :mapData="mapData"></MapGrid>
         <div v-if="player" class="player" :style="playerStyle"></div>
       </div>
       {{ player }} <br />
