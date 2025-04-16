@@ -14,7 +14,7 @@ const props = defineProps(["level", "mapData", "blockClass"]);
 function blockClass(x, y) {
   return props.blockClass instanceof Function
     ? props.blockClass(x, y)
-    : props.mapData[x][y];
+    : props.mapData[x][y]?.type;
 }
 </script>
 <template>

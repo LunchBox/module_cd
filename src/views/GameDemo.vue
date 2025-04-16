@@ -31,7 +31,9 @@ const spawnPoint = computed(() => {
 
   mapData.value.forEach((rows, x) =>
     rows.forEach((cell, y) => {
-      if (cell === "spawn") [point.x, point.y] = [x * CELL_SIZE, y * CELL_SIZE];
+      if (cell?.type === "spawn") {
+        [point.x, point.y] = [x * CELL_SIZE, y * CELL_SIZE];
+      }
     })
   );
 
@@ -39,7 +41,7 @@ const spawnPoint = computed(() => {
 });
 
 const isAccomplished = computed(() => {
-  const stars = originalMapData.value.flat().filter((v) => v === "star");
+  const stars = originalMapData.value.flat().filter((v) => v?.type === "star");
   return collectedStars.value === stars.length;
 });
 
@@ -60,7 +62,7 @@ function checkBlocked(shape) {
   mapData.value.forEach((rows, tx) => {
     rows.forEach((cell, ty) => {
       if (!cell) return;
-      if (cell === "spawn") return;
+      if (cell?.type === "spawn") return;
 
       const collPos = {
         x: tx * CELL_SIZE,
@@ -70,7 +72,7 @@ function checkBlocked(shape) {
       };
 
       if (intersect(shape, collPos)) {
-        if (cell === "star") {
+        if (cell?.type === "star") {
           collectStar();
           mapData.value[tx][ty] = null;
         } else {

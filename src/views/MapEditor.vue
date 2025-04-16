@@ -25,7 +25,7 @@ const tools = Object.freeze({
   remove: "Remove Tool",
 });
 
-import { placeBlock, removeBlock } from "./blockTools";
+import { placeBlock, removeBlock } from "./sceneTools";
 
 const router = useRouter();
 function toHome() {
@@ -46,8 +46,8 @@ const selectedTool = ref(null);
 
 function validMap() {
   const ds = mapData.value.flat();
-  const stars = ds.filter((d) => d === "star").length;
-  const spawn = ds.filter((d) => d === "spawn").length;
+  const stars = ds.filter((d) => d?.type === "star").length;
+  const spawn = ds.filter((d) => d?.type === "spawn").length;
   return stars >= 1 && spawn === 1;
 }
 
