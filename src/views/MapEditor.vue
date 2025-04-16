@@ -4,8 +4,6 @@ import { useRouter } from "vue-router";
 
 const LEVELS = 3;
 
-const currentLevel = ref(0);
-
 const tools = Object.freeze({
   spawn: "Spawn Point",
   star: "Star",
@@ -27,11 +25,14 @@ function initMapData() {
 
 const gameData = ref([...Array(LEVELS)].map(() => initMapData()));
 
-const mapData = ref(gameData.value[currentLevel.value]);
+const currentLevel = ref(0);
 
-watch(currentLevel, () => {
-  mapData.value = gameData.value[currentLevel.value];
-});
+const mapData = ref(gameData.value[0]);
+
+function toLevel(lv) {
+  currentLevel.value = lv;
+  mapData.value = gameData.value[lv];
+}
 
 function blockClass(x, y) {
   const cs = [];
@@ -171,6 +172,10 @@ function mouseUpOnBlock(x, y) {
     case "remove":
       if (!sameBlock) break;
 
+      if (selectedTool.value === "sloped") {
+        mapData.value[cx - 1][cy] = null;
+      }
+
       if (mapData.value[cx][cy] === "moving") {
         mapData.value[cx - 1][cy] = null;
         mapData.value[cx + 1][cy] = null;
@@ -190,6 +195,10 @@ function mouseUpOnBlock(x, y) {
         // 在同一格 mouse down & up，就放置對應的 block
         if (available(cx, cy)) {
           mapData.value[cx][cy] = selectedTool.value;
+
+          if (selectedTool.value === "sloped") {
+            mapData.value[cx - 1][cy] = "sloped-left";
+          }
 
           // 標記 moving platform
           if (selectedTool.value === "moving") {
@@ -280,10 +289,7 @@ function importData() {
       const data = JSON.parse(e.target.result); // 將文件內容轉換為物件
       console.log(data);
 
-      // ugly dirty fix
-      gameData.value = data;
-      currentLevel.value = 0;
-      mapData.value = gameData.value[currentLevel.value];
+      mapData.value = gameData.value[0];
     };
 
     reader.readAsText(file); // 讀取文件內容
@@ -301,12 +307,7 @@ function importData() {
       </h2>
 
       <div class="level-selector">
-        <button
-          v-for="(_, i) in LEVELS"
-          :key="i"
-          :class="{ active: currentLevel === i }"
-          @click="currentLevel = i"
-        >
+        <button v-for="(_, i) in LEVELS" :key="i" @click="toLevel(i)">
           Level {{ i }}
         </button>
       </div>
