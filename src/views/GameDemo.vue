@@ -60,10 +60,6 @@ function checkBlocked(shape) {
     rows.forEach((cell, ty) => {
       if (!cell) return;
       if (cell === "spawn") return;
-      if (cell === "star") {
-        collectStar();
-        mapData.value[tx][ty] = null;
-      }
 
       const collPos = {
         x: tx * CELL_SIZE,
@@ -73,7 +69,12 @@ function checkBlocked(shape) {
       };
 
       if (intersect(shape, collPos)) {
-        coll = true;
+        if (cell === "star") {
+          collectStar();
+          mapData.value[tx][ty] = null;
+        } else {
+          coll = true;
+        }
       }
     });
   });
@@ -207,6 +208,7 @@ const playerStyle = computed(() => {
         <MapGrid :mapData="mapData"></MapGrid>
         <div v-if="player" class="player" :style="playerStyle"></div>
       </div>
+      Collected Stars: {{ collectedStars }} <br />
       {{ player }} <br />
       {{ playerStyle }} <br />
     </div>
