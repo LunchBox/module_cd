@@ -1,10 +1,9 @@
 import { ref, computed, watch } from "vue";
 
-// ---- map basic info
-export const LEVELS = 3;
-export const CELL_SIZE = 50;
+import { LEVELS, MAP_H, MAP_W } from "./config";
 
-export const mapSize = ref({ w: 10, h: 10 });
+// incase ...
+export const mapSize = ref({ w: MAP_W, h: MAP_H });
 
 // ---- game info
 export const gameData = ref([...Array(LEVELS)].map(() => initMapData()));

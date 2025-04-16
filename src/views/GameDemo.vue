@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from "vue";
 import MapGrid from "./MapGrid.vue";
 
-import { CELL_SIZE } from "./useMapEditor";
+import { CELL_SIZE } from "./config";
 import {
   currentLevel,
   mapData as originalMapData,

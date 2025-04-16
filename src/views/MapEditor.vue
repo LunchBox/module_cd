@@ -3,8 +3,8 @@ import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import MapGrid from "./MapGrid.vue";
 
+import { LEVELS } from "./config";
 import {
-  LEVELS,
   mapSize,
   currentLevel,
   mapData,
