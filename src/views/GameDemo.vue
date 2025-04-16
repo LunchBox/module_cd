@@ -6,7 +6,7 @@ import { currentLevel } from "./useMapEditor";
 <template>
   <div>
     <div>
-      <button @click="$router.push('/editor')">Back</button>
+      <button @click="$router.push('/editor')">Returnto Editor</button>
     </div>
 
     <div>

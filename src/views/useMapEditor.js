@@ -22,6 +22,13 @@ export function toLevel(lv) {
   mapData.value = gameData.value[lv];
 }
 
+export function validMap() {
+  const ds = mapData.value.flat();
+  const stars = ds.filter((d) => d === "star").length;
+  const spawn = ds.filter((d) => d === "spawn").length;
+  return stars >= 1 && spawn === 1;
+}
+
 export function blockClass(x, y) {
   const cs = [];
 

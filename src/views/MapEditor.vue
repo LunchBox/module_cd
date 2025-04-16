@@ -1,5 +1,4 @@
 <script setup>
-import { onMounted, onUnmounted, ref, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import MapGrid from "./MapGrid.vue";
 
@@ -9,6 +8,7 @@ import {
   gameData,
   currentLevel,
   mapData,
+  validMap,
   selectedTool,
   initMapTools,
   mouseDownOnBlock,
@@ -33,6 +33,12 @@ function toHome() {
   if (!confirm("Map changes are not saved.Doyou want to return?")) return;
 
   router.push({ path: "/" });
+}
+
+function toDemo() {
+  if (!validMap()) return alert("关卡中包含至少一个 Start 和一个Spawn Point");
+  selectedTool.value = null;
+  router.push({ path: "/demo" });
 }
 
 function exportData() {
@@ -96,7 +102,7 @@ function importData() {
     <footer>
       <button @click="toHome">Home</button>
 
-      <button @click="$router.push('/demo')">Play Demo</button>
+      <button @click="toDemo">Play Demo</button>
 
       <button @click="exportData">Export</button>
       <button @click="importData">Import</button>
