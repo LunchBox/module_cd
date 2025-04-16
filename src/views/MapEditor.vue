@@ -5,10 +5,11 @@ import MapGrid from "./MapGrid.vue";
 
 import {
   LEVELS,
-  gameData,
   currentLevel,
   mapData,
   toLevel,
+  importData,
+  exportData,
 } from "./useMapEditor";
 import useEventListener from "./useEventListener";
 
@@ -256,38 +257,6 @@ function keyDown(e) {
 
 useEventListener(document, "mouseup", mouseUpOnScreen);
 useEventListener(document, "keydown", keyDown);
-
-// ---- import / export
-function exportData() {
-  const jsonStr = JSON.stringify(gameData.value);
-  const blob = new Blob([jsonStr], { type: "application/json" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "game.json"; // 檔名
-  a.click();
-}
-
-function importData() {
-  const input = document.createElement("input");
-  input.type = "file";
-  input.accept = ".json";
-
-  input.addEventListener("change", (event) => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-      const data = JSON.parse(e.target.result); // 將文件內容轉換為物件
-      console.log(data);
-
-      mapData.value = gameData.value[0];
-    };
-
-    reader.readAsText(file); // 讀取文件內容
-  });
-
-  input.click();
-}
 </script>
 <template>
   <div class="map-editor">
