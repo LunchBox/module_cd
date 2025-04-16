@@ -8,7 +8,7 @@ const emits = defineEmits([
 ]);
 </script>
 <template>
-  <div class="game" @contextmenu.prevent>
+  <div class="game-grid" @contextmenu.prevent>
     <div v-for="(_, y) in mapSize.h" :id="y" class="row">
       <div
         v-for="(_, x) in mapSize.w"
@@ -28,9 +28,7 @@ const emits = defineEmits([
 * {
   box-sizing: border-box;
 }
-.game {
-  margin: 1rem 0;
-
+.game-grid {
   .row {
     display: flex;
 
