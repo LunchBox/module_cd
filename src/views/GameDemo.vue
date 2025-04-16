@@ -10,7 +10,7 @@ import {
   levelAccomplished,
 } from "./useMapEditor";
 
-import { intersect, minMax } from "./useGameDemo";
+import { intersect, minMax } from "./utils";
 import useEventListener from "./useEventListener";
 
 // 左右移動的瞬間加速

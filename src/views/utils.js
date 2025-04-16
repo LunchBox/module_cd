@@ -1,5 +1,3 @@
-import { ref } from "vue";
-
 // 碰撞檢測
 export function intersect(a, b) {
   return (

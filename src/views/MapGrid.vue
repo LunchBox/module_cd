@@ -1,6 +1,8 @@
 <script setup>
 import { mapSize } from "./useMapEditor";
 
+import MovingPlatform from "./MovingPlatform.vue";
+
 const emits = defineEmits([
   "mousedown-on-block",
   "mouseover-on-block",
@@ -18,16 +20,18 @@ function blockClass(x, y) {
 <template>
   <div class="game-grid" @contextmenu.prevent>
     <div v-for="(_, y) in mapSize.h" :id="y" class="row">
-      <div
-        v-for="(_, x) in mapSize.w"
-        class="block"
-        :key="x"
-        :class="blockClass(x, y)"
-        @dragstart.prevent
-        @mousedown.left="$emit('mousedown-on-block', x, y)"
-        @mouseover="$emit('mouseover-on-block', x, y)"
-        @mouseup.left="$emit('mouseup-on-block', x, y)"
-      ></div>
+      <template v-for="(cell, x) in mapSize.w">
+        <div
+          class="block"
+          :class="blockClass(x, y)"
+          @dragstart.prevent
+          @mousedown.left="$emit('mousedown-on-block', x, y)"
+          @mouseover="$emit('mouseover-on-block', x, y)"
+          @mouseup.left="$emit('mouseup-on-block', x, y)"
+        >
+          <MovingPlatform v-if="mapData[x][y] === 'moving'"></MovingPlatform>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -144,6 +148,7 @@ function blockClass(x, y) {
         place-content: center;
         font-size: 2rem;
         background: #ccc;
+        opacity: 0.5;
       }
       &.moving-preview {
         opacity: 0.5;

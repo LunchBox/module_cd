@@ -5,6 +5,7 @@ import MapGrid from "./MapGrid.vue";
 
 import {
   LEVELS,
+  mapSize,
   currentLevel,
   mapData,
   toLevel,
