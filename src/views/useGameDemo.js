@@ -23,7 +23,7 @@ export function manufacturePlayer() {
   };
 }
 
-// 是否碰撞
+// 碰撞檢測
 function intersect(a, b) {
   return (
     a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y
@@ -48,7 +48,6 @@ function isBlocked(shape) {
       };
 
       if (intersect(shape, collPos)) {
-        // console.log(collPos);
         coll = true;
       }
     });
@@ -89,38 +88,34 @@ function move() {
 }
 
 // 左右移動的瞬間加速
-const MOVING_RATE = 5;
+const MOVING_RATE = 3;
 
 // 跳躍的瞬間加速
-const JUMPING_RATE = 5;
+const JUMPING_RATE = 3;
 
 function moveLeft(e) {
   startGame();
 
-  // 轉頭
-  if (player.value.speed.x > 0) player.value.speed.x = 0;
-
-  // 加速
-  player.value.speed.x += -MOVING_RATE;
-  player.value.speed.x = minMax(player.value.speed.x, -5, 5);
+  // x 方向不需要加速，只需要設置一個目標速度
+  player.value.speed.x = -MOVING_RATE;
 }
 
 // TODO: 和上面重複了，可以優化
 function moveRight(e) {
   startGame();
 
-  if (player.value.speed.x < 0) player.value.speed.x = 0;
-
-  player.value.speed.x += MOVING_RATE;
-  player.value.speed.x = minMax(player.value.speed.x, -5, 5);
+  player.value.speed.x = MOVING_RATE;
 }
 
+// 每次 keydown 只觸發一次 jump
 let jumped = false;
 function jump(e) {
   startGame();
 
   if (!jumped) {
     player.value.speed.y += -JUMPING_RATE;
+
+    // 速度太快會飛出去，限制 minmax
     player.value.speed.y = minMax(player.value.speed.y, -10, 10);
 
     jumped = true;
