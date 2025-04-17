@@ -3,6 +3,8 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 
 import { CELL_SIZE } from "./config";
 
+import { freeze } from "./game";
+
 const props = defineProps(["data", "vertical"]);
 
 const moving_rate = 1;
@@ -11,6 +13,8 @@ let diff = moving_rate;
 let handler;
 
 function movePlatform() {
+  if (freeze.value) return;
+
   props.data.offset += diff;
 
   if (props.data.offset >= CELL_SIZE) diff = -moving_rate;

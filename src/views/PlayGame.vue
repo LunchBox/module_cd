@@ -21,11 +21,16 @@ import {
 import { intersect, minMax } from "./utils";
 import useEventListener from "./useEventListener";
 
-import { mapData, player, collectedStars, gameOver } from "./game";
+import {
+  mapData,
+  player,
+  collectedStars,
+  gameOver,
+  gameStarted,
+  freeze,
+} from "./game";
 
 const emit = defineEmits(["lost-life"]);
-
-const gameStarted = ref(false);
 
 // 左右移動的瞬間加速
 const MOVING_RATE = 3;
@@ -215,11 +220,13 @@ useEventListener(document, "keyup", keyup);
 function startGame() {
   if (gameStarted.value) return;
   gameStarted.value = true;
+  freeze.value = false;
   render();
 }
 
 function pauseGame() {
   gameStarted.value = false;
+  freeze.value = true;
 }
 
 function render() {

@@ -9,6 +9,10 @@ export const collectedStars = ref(0);
 
 export const gameOver = ref(false);
 
+export const gameStarted = ref(false);
+
+export const freeze = ref(false);
+
 export function initGame() {
   // 應為要移除星星，克隆一份
   mapData.value = JSON.parse(JSON.stringify(originalMapData.value));
