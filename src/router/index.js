@@ -6,6 +6,7 @@ import InstructionPage from "@/views/InstructionPage.vue";
 import MapPreviewPage from "@/views/MapPreviewPage.vue";
 import ModuleD from "@/views/ModuleD.vue";
 import RanksPage from "@/views/RanksPage.vue";
+import GamePage from "@/views/GamePage.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,6 +22,7 @@ const router = createRouter({
     { path: "/map-preview", component: MapPreviewPage },
     { path: "/ranks", component: RanksPage },
     { path: "/module_d", component: ModuleD },
+    { path: "/game", component: GamePage },
     {
       path: "/about",
       name: "about",

@@ -9,5 +9,7 @@
     <button @click="$router.push('/map-preview')">
       地图预览页（Map Preview Page）
     </button>
+
+    <button @click="$router.push('/game')">游戏页（Game Page）</button>
   </div>
 </template>
