@@ -13,5 +13,10 @@ watch(lostLife, () => {
 initGame();
 </script>
 <template>
-  <PlayGame></PlayGame>
+  <div>
+    <div>
+      <button @click="$router.push('/editor')">Returnto Editor</button>
+    </div>
+    <PlayGame></PlayGame>
+  </div>
 </template>

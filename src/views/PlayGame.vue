@@ -287,10 +287,6 @@ const playerStyle = computed(() => {
 <template>
   <div>
     <div>
-      <button @click="$router.push('/editor')">Returnto Editor</button>
-    </div>
-
-    <div>
       <header>
         <h2>
           Map Editor - Level
