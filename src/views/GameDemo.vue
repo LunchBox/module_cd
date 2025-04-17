@@ -47,8 +47,9 @@ const isAccomplished = computed(() => {
 
 const player = ref(manufacturePlayer(mapData));
 
-function collectStar() {
+function collectStar(tx, ty) {
   collectedStars.value += 1;
+  mapData.value[tx][ty] = null;
 
   if (isAccomplished.value) {
     accomplishedLevels.value.add(currentLevel.value);
@@ -62,19 +63,32 @@ function checkBlocked(shape) {
   mapData.value.forEach((rows, tx) => {
     rows.forEach((cell, ty) => {
       if (!cell) return;
+
+      // 移動平台的前後上下不用檢查是否碰撞
+      if (cell?.type?.startsWith("moving-")) return;
+
       if (cell?.type === "spawn") return;
 
-      const collPos = {
-        x: tx * CELL_SIZE,
-        y: ty * CELL_SIZE,
-        w: CELL_SIZE,
-        h: CELL_SIZE,
-      };
+      let collPos;
+      if (cell?.type === "moving") {
+        collPos = {
+          x: tx * CELL_SIZE + cell.offset,
+          y: ty * CELL_SIZE,
+          w: CELL_SIZE,
+          h: CELL_SIZE,
+        };
+      } else {
+        collPos = {
+          x: tx * CELL_SIZE,
+          y: ty * CELL_SIZE,
+          w: CELL_SIZE,
+          h: CELL_SIZE,
+        };
+      }
 
       if (intersect(shape, collPos)) {
         if (cell?.type === "star") {
-          collectStar();
-          mapData.value[tx][ty] = null;
+          collectStar(tx, ty);
         } else {
           coll = true;
         }
@@ -99,7 +113,7 @@ function move() {
     player.value.speed.x = 0;
   }
 
-  // 分開 xy verifya
+  // 分開 xy 檢查是否能夠移動
   const pendingY = player.value.position.y + speedY;
   if (!checkBlocked({ x, y: pendingY, w, h })) {
     player.value.position.y += speedY;
