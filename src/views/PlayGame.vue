@@ -24,8 +24,6 @@ import {
   freeze,
 } from "./game";
 
-const emit = defineEmits(["lost-life"]);
-
 // 左右移動的瞬間加速
 const MOVING_RATE = 3;
 
@@ -152,7 +150,7 @@ function checkBlocked(shape) {
   return coll;
 }
 
-function move() {
+function renderFrame() {
   const { x, y, w, h, speedX, speedY } = player.value;
 
   // 預計前往的 x
@@ -174,8 +172,6 @@ function move() {
   // gravity
   player.value.speedY += 9.8 / 20;
   player.value.speedY = minMax(player.value.speedY, -10, 10);
-
-  // if (speedX !== 0) player.value.speedX += speedX > 0 ? -1 : 1;
 }
 
 function moveLeft(e) {
@@ -228,7 +224,7 @@ useEventListener(document, "keydown", (e) => {
 });
 
 function render() {
-  move();
+  renderFrame();
   if (gameStarted.value) {
     requestAnimationFrame(render);
   }
