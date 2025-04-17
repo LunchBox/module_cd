@@ -1,5 +1,6 @@
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch } from "vue";
+import { useRouter } from "vue-router";
 
 import { LEVELS, DEFAULE_LIFES } from "@/libs/config";
 import {
@@ -68,6 +69,7 @@ function retry() {
   lifes.value = DEFAULE_LIFES;
   currentLevel.value = 0;
   modal.value = null;
+
   initGame();
   resetTimer();
   onResume();
@@ -84,7 +86,14 @@ function onResume() {
 }
 
 initGame();
+resetTimer();
 startTimer();
+
+const router = useRouter();
+function toHome() {
+  if (!confirm("Do you want to return?")) return;
+  router.push("/");
+}
 </script>
 <template>
   <div>
@@ -108,7 +117,7 @@ startTimer();
       <PlayableLevel></PlayableLevel>
 
       <div>
-        <button @click="$router.push('/')">Home</button>
+        <button @click="toHome">Home</button>
         <button @click="onPause">Pause</button>
         <button @click="onResume">Resume</button>
       </div>
