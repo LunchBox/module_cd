@@ -50,8 +50,10 @@ const spawnPoint = computed(() => {
 // player 工廠
 function manufacturePlayer() {
   return {
-    position: { ...spawnPoint.value },
-    shape: { w: 50, h: 50 },
-    speed: { x: 0, y: 0 },
+    ...spawnPoint.value,
+    w: 50,
+    h: 50,
+    speedX: 0,
+    speedY: 0,
   };
 }

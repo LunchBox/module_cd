@@ -33,8 +33,7 @@ const DEFAULT_JUMP_RATE = 8;
 const jumpRate = ref(DEFAULT_JUMP_RATE);
 
 function checkGame() {
-  const { x, y } = player.value.position;
-  const { w, h } = player.value.shape;
+  const { x, y, w, h } = player.value;
   const { w: mw, h: mh } = mapSize.value;
 
   if (x < 0 || x + w > mw * CELL_SIZE || y < 0 || y + h > mh * CELL_SIZE) {
@@ -105,8 +104,7 @@ const allRects = computed(() => {
 });
 
 function interactWithJump(rect) {
-  const { x, y } = player.value.position;
-  const { w, h } = player.value.shape;
+  const { x, y, w, h } = player.value;
 
   // 站在 jump 上面
   if (y + h > rect.y - 1) {
@@ -115,8 +113,7 @@ function interactWithJump(rect) {
 }
 
 function interactWithPlatform(rect) {
-  const { x, y } = player.value.position;
-  const { w, h } = player.value.shape;
+  const { x, y, w, h } = player.value;
 
   // 碰到尖刺(player 的 rect 低於 moving block 的頂端就視為碰到尖刺)
   if (y + h > rect.y + 2) {
@@ -126,7 +123,7 @@ function interactWithPlatform(rect) {
     // move the player
     // 暫時只做到抬高 player
     if (rect.type === "moving-y") {
-      player.value.position.y = rect.y - h;
+      player.value.y = rect.y - h;
     }
   }
 }
@@ -161,46 +158,43 @@ function checkBlocked(shape) {
 }
 
 function move() {
-  const { position, speed, shape } = player.value;
-  const { x, y } = position;
-  const { x: speedX, y: speedY } = speed;
-  const { w, h } = shape;
+  const { x, y, w, h, speedX, speedY } = player.value;
 
   // 預計前往的 x
-  const pendingX = player.value.position.x + speedX;
+  const pendingX = player.value.x + speedX;
   if (!checkBlocked({ x: pendingX, y, w, h })) {
-    player.value.position.x += speedX;
+    player.value.x += speedX;
   } else {
-    player.value.speed.x = 0;
+    player.value.speedX = 0;
   }
 
   // 分開 xy 檢查是否能夠移動
-  const pendingY = player.value.position.y + speedY;
+  const pendingY = player.value.y + speedY;
   if (!checkBlocked({ x, y: pendingY, w, h })) {
-    player.value.position.y += speedY;
+    player.value.y += speedY;
   } else {
-    player.value.speed.y = 0;
+    player.value.speedY = 0;
   }
 
   // gravity
-  player.value.speed.y += 9.8 / 20;
-  player.value.speed.y = minMax(player.value.speed.y, -10, 10);
+  player.value.speedY += 9.8 / 20;
+  player.value.speedY = minMax(player.value.speedY, -10, 10);
 
-  // if (speedX !== 0) player.value.speed.x += speedX > 0 ? -1 : 1;
+  // if (speedX !== 0) player.value.speedX += speedX > 0 ? -1 : 1;
 }
 
 function moveLeft(e) {
   resumeGame();
 
   // x 方向不需要加速，只需要設置一個目標速度
-  player.value.speed.x = -MOVING_RATE;
+  player.value.speedX = -MOVING_RATE;
 }
 
 // TODO: 和上面重複了，可以優化
 function moveRight(e) {
   resumeGame();
 
-  player.value.speed.x = MOVING_RATE;
+  player.value.speedX = MOVING_RATE;
 }
 
 // 每次 keydown 只觸發一次 jump
@@ -209,10 +203,10 @@ function jump(e) {
   resumeGame();
 
   if (!jumped) {
-    player.value.speed.y += -jumpRate.value;
+    player.value.speedY += -jumpRate.value;
 
     // 速度太快會飛出去，限制 minmax
-    player.value.speed.y = minMax(player.value.speed.y, -10, 10);
+    player.value.speedY = minMax(player.value.speedY, -10, 10);
 
     jumped = true;
   }
@@ -282,10 +276,10 @@ const playerStyle = computed(() => {
   if (!player.value) return {};
   const p = player.value;
   return {
-    left: p.position.x + "px",
-    top: `${p.position.y}px`,
-    width: p.shape.w + "px",
-    height: p.shape.h + "px",
+    left: p.x + "px",
+    top: p.y + "px",
+    width: p.w + "px",
+    height: p.h + "px",
   };
 });
 </script>
