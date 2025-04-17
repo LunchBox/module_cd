@@ -56,44 +56,53 @@ function collectStar(tx, ty) {
   }
 }
 
-function checkBlocked(shape) {
-  let coll = false;
+// 取出 grid 裡所有的 block
+const allRects = computed(() => {
+  const rects = [];
 
-  // TODO: should find the destination blocks first
   mapData.value.forEach((rows, tx) => {
     rows.forEach((cell, ty) => {
       if (!cell) return;
+      if (cell?.type === "spawn") return;
 
       // 移動平台的前後上下不用檢查是否碰撞
       if (cell?.type?.startsWith("moving-")) return;
 
-      if (cell?.type === "spawn") return;
+      const rect = {
+        type: cell.type,
+        gx: tx,
+        gy: ty,
+        x: tx * CELL_SIZE,
+        y: ty * CELL_SIZE,
+        w: CELL_SIZE,
+        h: CELL_SIZE,
+      };
 
-      let collPos;
       if (cell?.type === "moving") {
-        collPos = {
-          x: tx * CELL_SIZE + cell.offset,
-          y: ty * CELL_SIZE,
-          w: CELL_SIZE,
-          h: CELL_SIZE,
-        };
-      } else {
-        collPos = {
-          x: tx * CELL_SIZE,
-          y: ty * CELL_SIZE,
-          w: CELL_SIZE,
-          h: CELL_SIZE,
-        };
+        rect.x += cell.offset;
       }
 
-      if (intersect(shape, collPos)) {
-        if (cell?.type === "star") {
-          collectStar(tx, ty);
-        } else {
-          coll = true;
-        }
-      }
+      rects.push(rect);
     });
+  });
+
+  return rects;
+});
+
+console.log(allRects.value);
+
+function checkBlocked(shape) {
+  let coll = false;
+
+  // TODO: should find the destination blocks first
+  allRects.value.forEach((rect) => {
+    if (intersect(shape, rect)) {
+      if (rect?.type === "star") {
+        collectStar(rect.gx, rect.gy);
+      } else {
+        coll = true;
+      }
+    }
   });
 
   return coll;

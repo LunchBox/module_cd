@@ -141,8 +141,8 @@ function blockClass(x, y) {
 
       /* 水平移動平台 */
       &.moving::after,
-      &.moving-preview::after {
-        content: "〰️";
+      &.moving-preview::before {
+        content: " ";
         position: absolute;
         width: 150px;
         margin-left: -50px;
@@ -150,13 +150,18 @@ function blockClass(x, y) {
         display: grid;
         place-content: center;
         font-size: 2rem;
-        background: #ccc;
-        opacity: 0.5;
+        /* background: #ccc;
+        z-index: -1; */
       }
       &.moving-preview {
         opacity: 0.5;
 
-        &.taken::after {
+        &::before {
+          background: #ccc;
+          z-index: -1;
+        }
+
+        &.taken::before {
           background-color: tomato;
         }
       }
