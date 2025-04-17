@@ -16,6 +16,11 @@ export const gameStarted = ref(false);
 // 凍住 moving platform
 export const freeze = ref(false);
 
+export const isAccomplished = computed(() => {
+  const stars = mapData.value.flat().filter((v) => v?.type === "star");
+  return collectedStars.value === stars.length;
+});
+
 // reset all game status
 export function initGame() {
   // 應為要移除星星，克隆一份

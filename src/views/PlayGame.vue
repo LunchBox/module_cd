@@ -18,6 +18,7 @@ import {
   mapData,
   player,
   collectedStars,
+  isAccomplished,
   lostLife,
   gameStarted,
   freeze,
@@ -51,11 +52,6 @@ watch(
 );
 
 // -------------------------------------------------
-
-const isAccomplished = computed(() => {
-  const stars = originalMapData.value.flat().filter((v) => v?.type === "star");
-  return collectedStars.value === stars.length;
-});
 
 function collectStar(tx, ty) {
   collectedStars.value += 1;
