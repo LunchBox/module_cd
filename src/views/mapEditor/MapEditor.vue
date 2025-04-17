@@ -4,9 +4,8 @@ import { useRouter } from "vue-router";
 
 import useEventListener from "@/utils/useEventListener";
 
-import MapGrid from "@/components/MapGrid.vue";
-
 import { LEVELS, MAP_ROWS, MAP_COLS } from "@/stores/config";
+
 import {
   currentLevel,
   mapData,
@@ -15,6 +14,10 @@ import {
   exportData,
   levelAccomplished,
 } from "@/stores/entireGame";
+
+import { placeBlock, removeBlock } from "./tools";
+
+import MapGrid from "@/components/MapGrid.vue";
 
 const tools = Object.freeze({
   spawn: "Spawn Point",
@@ -25,8 +28,6 @@ const tools = Object.freeze({
   moving: "Moving Platform",
   remove: "Remove Tool",
 });
-
-import { placeBlock, removeBlock } from "./tools";
 
 const router = useRouter();
 function toHome() {
@@ -54,7 +55,7 @@ function validMap() {
 function blockClass(x, y) {
   const cs = [];
 
-  // 如果已放置 block
+  // 如果已放置 block，使用 block 的 type 作為 class
   cs.push({ [mapData.value[x][y]?.type]: !!mapData.value[x][y] });
 
   // 如果選中了某個 tool 準備放置
@@ -64,18 +65,17 @@ function blockClass(x, y) {
     if (dragging.value && draggingPath.value) {
       // 如果當前 block 在 draggingPath 中，顯示 preview
       if (draggingPath.value.some(({ x: dx, y: dy }) => dx === x && dy === y)) {
-        cs.push(`base-preview`);
+        cs.push(`base-preview`, "preview");
       }
     } else if (x == cx && y == cy) {
       // 鼠標 hover 時顯示 preview
       if (selectedTool.value && selectedTool.value !== "remove") {
-        cs.push(`${selectedTool.value}-preview`);
+        cs.push(`${selectedTool.value}-preview`, "preview");
       }
     }
   }
 
   // 如果已被佔用
-  // 可以優化
   if (!available(x, y)) cs.push("taken");
 
   return cs;

@@ -1,29 +1,8 @@
 # module_cd
 
-This template should help get you started developing with Vue 3 in Vite.
+“Target Start”是一款前端游戏，玩家可以通过网络浏览器访问游玩。游戏提供了创意模式和挑战模式。在创意模式下，玩家可以使用工具箱设计游戏场景。在挑战模式中，玩家可以挑战自己创建的地图，也可以通过上传地图游玩其他人制作的游戏关卡。
 
-## Recommended IDE Setup
+该项目分为两个阶段：
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
+- Module C，完成风格指南和游戏页面的设计。主页和地图编辑器页面的功能实现。
+- Module D，基于第一阶段完成的设计，实现游戏所需的完整功能。

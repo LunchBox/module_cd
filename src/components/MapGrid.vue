@@ -47,6 +47,7 @@ function blockClass(x, y) {
 * {
   box-sizing: border-box;
 }
+
 .game-grid {
   .row {
     display: flex;
@@ -57,21 +58,18 @@ function blockClass(x, y) {
       border: 1px solid #ccc;
       position: relative;
 
-      &.base,
-      &.base-preview {
+      &.base::before,
+      &.base-preview::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
         background: #333;
-      }
-      &.base-preview {
-        opacity: 0.5;
-
-        &.taken {
-          background: tomato;
-        }
       }
 
       /* 星星 */
-      &.star::after,
-      &.star-preview::after {
+      &.star::before,
+      &.star-preview::before {
         content: "⭐";
         position: absolute;
         width: 100%;
@@ -80,17 +78,10 @@ function blockClass(x, y) {
         place-content: center;
         font-size: 2rem;
       }
-      &.star-preview {
-        opacity: 0.5;
-
-        &.taken::after {
-          background-color: tomato;
-        }
-      }
 
       /* 彈簧 */
-      &.jump::after,
-      &.jump-preview::after {
+      &.jump::before,
+      &.jump-preview::before {
         content: "🆙";
         position: absolute;
         width: 100%;
@@ -98,13 +89,6 @@ function blockClass(x, y) {
         display: grid;
         place-content: center;
         font-size: 2rem;
-      }
-      &.jump-preview {
-        opacity: 0.5;
-
-        &.taken::after {
-          background-color: tomato;
-        }
       }
 
       /* 出生點 */
@@ -118,33 +102,21 @@ function blockClass(x, y) {
         place-content: center;
         font-size: 2rem;
       }
-      &.spawn-preview {
-        opacity: 0.5;
-
-        &.taken::before {
-          background-color: tomato;
-        }
-      }
 
       /* 斜坡 */
-      &.sloped,
-      &.sloped-preview {
+      &.sloped::before,
+      &.sloped-preview::before {
+        content: "";
+        position: absolute;
         border-color: transparent #333 #333 transparent;
         border-style: solid;
         border-width: 25px;
         width: 0;
         height: 0;
       }
-      &.sloped-preview {
-        opacity: 0.5;
-
-        &.taken {
-          border-color: transparent tomato tomato transparent;
-        }
-      }
 
       /* 水平移動平台 */
-      &.moving::after,
+      &.moving::before,
       &.moving-preview::before {
         content: " ";
         position: absolute;
@@ -152,21 +124,13 @@ function blockClass(x, y) {
         height: 100%;
         margin-left: -50px;
       }
-      &.moving-preview {
-        opacity: 0.5;
-
-        &::before {
-          background: #ccc;
-          z-index: -1;
-        }
-
-        &.taken::before {
-          background-color: tomato;
-        }
+      &.moving-preview::before {
+        background: #ccc;
+        z-index: -1;
       }
 
       /* 垂直移動平台 */
-      &.moving-y::after,
+      &.moving-y::before,
       &.moving-y-preview::before {
         content: "";
         position: absolute;
@@ -174,18 +138,22 @@ function blockClass(x, y) {
         height: 150px;
         margin-top: -50px;
       }
-      &.moving-y-preview {
-        opacity: 0.5;
-
-        &::before {
-          background: #ccc;
-          z-index: -1;
-        }
-
-        &.taken::before {
-          background-color: tomato;
-        }
+      &.moving-preview::before {
+        background: #ccc;
+        z-index: -1;
       }
+    }
+
+    .preview {
+      opacity: 0.5;
+    }
+
+    .preview.taken::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(200, 0, 0, 0.5);
     }
   }
 }
