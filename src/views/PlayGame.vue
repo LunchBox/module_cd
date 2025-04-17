@@ -33,7 +33,9 @@ const MOVING_RATE = 3;
 const DEFAULT_JUMP_RATE = 8;
 const jumpRate = ref(DEFAULT_JUMP_RATE);
 
-function checkGame() {
+// 檢查邊界，如果 player 碰到邊界視為 lost life
+function checkBorders() {
+  if (!player.value) return;
   const { x, y, w, h } = player.value;
   const { w: mw, h: mh } = mapSize.value;
 
@@ -42,27 +44,11 @@ function checkGame() {
   }
 }
 
-watch(
-  player,
-  () => {
-    if (!player.value) return;
-    checkGame();
-  },
-  { deep: true }
-);
+watch(player, checkBorders, { deep: true });
 
 // -------------------------------------------------
 
-function collectStar(tx, ty) {
-  collectedStars.value += 1;
-  mapData.value[tx][ty] = null;
-
-  if (isAccomplished.value) {
-    accomplishedLevels.value.add(currentLevel.value);
-  }
-}
-
-// 取出 grid 裡所有的 block
+// 取出 grid 裡所有的 rect
 const allRects = computed(() => {
   const rects = [];
 
@@ -98,6 +84,17 @@ const allRects = computed(() => {
 
   return rects;
 });
+
+function interactWithStar(rect) {
+  const { gx, gy } = rect;
+  mapData.value[gx][gy] = null;
+
+  collectedStars.value += 1;
+
+  if (isAccomplished.value) {
+    accomplishedLevels.value.add(currentLevel.value);
+  }
+}
 
 function interactWithJump(rect) {
   const { x, y, w, h } = player.value;
@@ -141,7 +138,9 @@ function checkBlocked(shape) {
           coll = true;
           break;
         case "star":
-          collectStar(rect.gx, rect.gy);
+          interactWithStar(rect);
+          // 這裡不設置 col = true
+          // star 可以被拾取后穿過
           break;
         default:
           jumpRate.value = DEFAULT_JUMP_RATE;

@@ -7,6 +7,8 @@ import { currentLevel } from "./useMapEditor";
 
 import PlayGame from "./PlayGame.vue";
 
+currentLevel.value = 0;
+
 const lifes = ref(DEFAULE_LIFES);
 
 const modal = ref(null);

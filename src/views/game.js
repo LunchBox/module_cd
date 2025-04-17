@@ -2,7 +2,7 @@ import { ref, computed } from "vue";
 import { mapData as currentMapData } from "./useMapEditor";
 import { CELL_SIZE } from "./config";
 
-// 正在遊戲的 map，可以移除 star
+// 正在 play 中的 map
 export const mapData = ref(null);
 
 export const player = ref(null);
