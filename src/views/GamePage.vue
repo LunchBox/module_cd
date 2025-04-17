@@ -49,6 +49,13 @@ initGame();
 </script>
 <template>
   <div>
+    <header>
+      <h2>
+        Game Page - Level
+        {{ currentLevel }}
+      </h2>
+    </header>
+
     <div>
       Lives:
       <span v-for="i in lifes">❤️</span>

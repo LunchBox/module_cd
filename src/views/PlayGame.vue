@@ -280,9 +280,6 @@ const playerStyle = computed(() => {
     <div>
       <header>
         <h2>
-          Map Editor - Level
-          {{ currentLevel }}
-
           <span v-if="levelAccomplished"> !!! Accomplished !!!</span>
         </h2>
       </header>
