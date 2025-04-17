@@ -1,27 +1,37 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 
 import { CELL_SIZE } from "./config";
 
-const props = defineProps(["data"]);
+const props = defineProps(["data", "vertical"]);
 
 const moving_rate = 1;
 let diff = moving_rate;
 
-function render() {
+let handler;
+
+function movePlatform() {
   props.data.offset += diff;
 
   if (props.data.offset >= CELL_SIZE) diff = -moving_rate;
   if (props.data.offset <= -CELL_SIZE) diff = moving_rate;
-  requestAnimationFrame(render);
 }
 
-const blockStyle = computed(() => {
-  return { left: `${0 + props.data.offset}px`, width: `${CELL_SIZE}px` };
+onMounted(() => {
+  if (handler) clearInterval(handler);
+  handler = setInterval(movePlatform, 20);
 });
 
-onMounted(() => {
-  render();
+onUnmounted(() => {
+  if (handler) clearInterval(handler);
+});
+
+const blockStyle = computed(() => {
+  if (props.vertical) {
+    return { top: `${0 + props.data.offset}px`, width: `${CELL_SIZE}px` };
+  } else {
+    return { left: `${0 + props.data.offset}px`, width: `${CELL_SIZE}px` };
+  }
 });
 </script>
 <template>

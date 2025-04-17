@@ -124,6 +124,16 @@ const allRects = computed(() => {
   return rects;
 });
 
+function interactWithPlatform(rect) {
+  const { x, y } = player.value.position;
+  const { w, h } = player.value.shape;
+
+  // 碰到尖刺
+  if (y + h > rect.y) {
+    gameOver.value = true;
+  }
+}
+
 function checkBlocked(shape) {
   let coll = false;
 
@@ -131,6 +141,11 @@ function checkBlocked(shape) {
   allRects.value.forEach((rect) => {
     if (intersect(shape, rect)) {
       switch (rect.type) {
+        case "moving":
+        case "moving-y":
+          interactWithPlatform(rect);
+          coll = true;
+          break;
         case "star":
           collectStar(rect.gx, rect.gy);
           break;

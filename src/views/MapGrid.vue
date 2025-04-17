@@ -33,6 +33,11 @@ function blockClass(x, y) {
             v-if="mapData[x][y]?.type === 'moving'"
             :data="mapData[x][y]"
           ></MovingPlatform>
+          <MovingPlatform
+            v-if="mapData[x][y]?.type === 'moving-y'"
+            :data="mapData[x][y]"
+            :vertical="true"
+          ></MovingPlatform>
         </div>
       </template>
     </div>
@@ -145,13 +150,8 @@ function blockClass(x, y) {
         content: " ";
         position: absolute;
         width: 150px;
-        margin-left: -50px;
         height: 100%;
-        display: grid;
-        place-content: center;
-        font-size: 2rem;
-        /* background: #ccc;
-        z-index: -1; */
+        margin-left: -50px;
       }
       &.moving-preview {
         opacity: 0.5;
@@ -168,21 +168,22 @@ function blockClass(x, y) {
 
       /* 垂直移動平台 */
       &.moving-y::after,
-      &.moving-y-preview::after {
-        content: "〰️";
+      &.moving-y-preview::before {
+        content: "";
         position: absolute;
         width: 100%;
         height: 150px;
         margin-top: -50px;
-        display: grid;
-        place-content: center;
-        font-size: 2rem;
-        background: #ccc;
       }
       &.moving-y-preview {
         opacity: 0.5;
 
-        &.taken::after {
+        &::before {
+          background: #ccc;
+          z-index: -1;
+        }
+
+        &.taken::before {
           background-color: tomato;
         }
       }
