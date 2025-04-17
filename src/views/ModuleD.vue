@@ -13,5 +13,7 @@
     </button>
 
     <button @click="$router.push('/game')">游戏页（Game Page）</button>
+
+    <button @click="$router.push('/ranks')">排行榜页（Ranking Page）</button>
   </div>
 </template>

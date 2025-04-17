@@ -23,11 +23,21 @@ import {
   resetTimer,
 } from "./timer";
 
+import { ranks } from "@/stores/ranks";
+
+const currentRanks = ref([]);
+
 const lifes = ref(DEFAULE_LIFES);
 
 currentLevel.value = 0;
 
 const modal = ref(null);
+
+function restartLevel() {
+  initGame();
+  resetTimer();
+  onResume();
+}
 
 watch(lostLife, () => {
   // 只看 lostLife.value = true
@@ -40,14 +50,21 @@ watch(lostLife, () => {
   if (lifes.value <= 0) {
     modal.value = "gameOver";
   } else {
-    initGame();
-    onResume();
+    restartLevel();
   }
 });
+
+const nickName = ref(null);
 
 watch(isAccomplished, () => {
   // 只看 isAccomplished.value = true
   if (!isAccomplished.value) return;
+
+  currentRanks.value.push({
+    level: currentLevel.value,
+    times: timer.value,
+    lifes: lifes.value,
+  });
 
   onPause();
 
@@ -61,18 +78,16 @@ watch(isAccomplished, () => {
 function nextLevel() {
   modal.value = null;
   currentLevel.value += 1;
-  initGame();
-  onResume();
+  restartLevel();
 }
 
 function retry() {
   lifes.value = DEFAULE_LIFES;
   currentLevel.value = 0;
   modal.value = null;
+  currentRanks.value = [];
 
-  initGame();
-  resetTimer();
-  onResume();
+  restartLevel();
 }
 
 function onPause() {
@@ -85,14 +100,20 @@ function onResume() {
   startTimer();
 }
 
-initGame();
-resetTimer();
-startTimer();
+restartLevel();
 
 const router = useRouter();
 function toHome() {
   if (!confirm("Do you want to return?")) return;
   router.push("/");
+}
+
+function submitRanks() {
+  currentRanks.value.forEach((obj) => {
+    ranks.value.push({ ...obj, nickName });
+    console.log(ranks.value);
+    router.push("/ranks");
+  });
 }
 </script>
 <template>
@@ -138,11 +159,18 @@ function toHome() {
     </div>
 
     <div class="modal" v-if="modal === 'gameAccomplished'">
-      <div>
-        You Did IT!!!<br />
-        <input type="text" placeholder="Input Your Name" />
-        <button @click="retry">Submit Ranking</button>
-      </div>
+      <form @submit.prevent="submitRanks">
+        <div>
+          You Did IT!!!<br />
+          <input
+            type="text"
+            placeholder="Input Your Name"
+            v-model="nickName"
+            required
+          />
+          <button>Submit Ranking</button>
+        </div>
+      </form>
     </div>
   </div>
 </template>
