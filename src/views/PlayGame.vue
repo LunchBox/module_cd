@@ -168,7 +168,7 @@ function move() {
 }
 
 function moveLeft(e) {
-  startGame();
+  resumeGame();
 
   // x 方向不需要加速，只需要設置一個目標速度
   player.value.speed.x = -MOVING_RATE;
@@ -176,7 +176,7 @@ function moveLeft(e) {
 
 // TODO: 和上面重複了，可以優化
 function moveRight(e) {
-  startGame();
+  resumeGame();
 
   player.value.speed.x = MOVING_RATE;
 }
@@ -184,7 +184,7 @@ function moveRight(e) {
 // 每次 keydown 只觸發一次 jump
 let jumped = false;
 function jump(e) {
-  startGame();
+  resumeGame();
 
   if (!jumped) {
     player.value.speed.y += -JUMPING_RATE;
@@ -196,7 +196,13 @@ function jump(e) {
   }
 }
 
-function keydown(e) {
+// 放開按下的按鍵就重設 jumped
+useEventListener(document, "keyup", (e) => {
+  jumped = false;
+});
+
+// 監聽其他方向鍵
+useEventListener(document, "keydown", (e) => {
   switch (e.key) {
     case "a":
       moveLeft();
@@ -208,49 +214,44 @@ function keydown(e) {
       jump();
       break;
   }
+});
+
+function render() {
+  move();
+  if (gameStarted.value) {
+    requestAnimationFrame(render);
+  }
 }
 
-function keyup(e) {
-  jumped = false;
-}
-
-useEventListener(document, "keydown", keydown);
-useEventListener(document, "keyup", keyup);
-
-function startGame() {
+// 繼續遊戲
+function resumeGame() {
   if (gameStarted.value) return;
   gameStarted.value = true;
   freeze.value = false;
   render();
 }
 
+// 暫停遊戲
 function pauseGame() {
   gameStarted.value = false;
   freeze.value = true;
 }
 
-function render() {
-  move();
+onMounted(resumeGame);
 
-  if (gameStarted.value) {
-    requestAnimationFrame(render);
-  }
-}
-
-onMounted(() => {
-  render();
-});
-
+// 記得在離開時暫停 game
 onUnmounted(() => {
   gameStarted.value = false;
+  freeze.value = false;
 });
 
+// 空格暫停和繼續遊戲
 useEventListener(document, "keydown", (e) => {
   if (e.code === "Space") {
     if (gameStarted.value) {
       pauseGame();
     } else {
-      startGame();
+      resumeGame();
     }
   }
 });
