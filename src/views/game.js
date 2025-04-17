@@ -1,7 +1,8 @@
 import { ref, computed } from "vue";
-import { mapData as originalMapData } from "./useMapEditor";
+import { mapData as currentMapData } from "./useMapEditor";
 import { CELL_SIZE } from "./config";
 
+// 正在遊戲的 map，可以移除 star
 export const mapData = ref(null);
 
 export const player = ref(null);
@@ -17,14 +18,14 @@ export const gameStarted = ref(false);
 export const freeze = ref(false);
 
 export const isAccomplished = computed(() => {
-  const stars = mapData.value.flat().filter((v) => v?.type === "star");
+  const stars = currentMapData.value.flat().filter((v) => v?.type === "star");
   return collectedStars.value === stars.length;
 });
 
 // reset all game status
 export function initGame() {
   // 應為要移除星星，克隆一份
-  mapData.value = JSON.parse(JSON.stringify(originalMapData.value));
+  mapData.value = JSON.parse(JSON.stringify(currentMapData.value));
 
   player.value = manufacturePlayer(mapData);
 
