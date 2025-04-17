@@ -3,10 +3,10 @@ import { ref, watch } from "vue";
 
 import PlayGame from "./PlayGame.vue";
 
-import { gameOver, initGame } from "./game";
+import { lostLife, initGame } from "./game";
 
-watch(gameOver, () => {
-  if (gameOver.value) {
+watch(lostLife, () => {
+  if (lostLife.value) {
     alert("Game Over!");
     initGame();
   }

@@ -8,10 +8,12 @@ export const player = ref(null);
 
 export const collectedStars = ref(0);
 
-export const gameOver = ref(false);
+export const lostLife = ref(false);
 
+// 遊戲是否已開始
 export const gameStarted = ref(false);
 
+// 凍住 moving platform
 export const freeze = ref(false);
 
 // reset all game status
@@ -23,7 +25,7 @@ export function initGame() {
 
   collectedStars.value = 0;
 
-  gameOver.value = false;
+  lostLife.value = false;
 
   gameStarted.value = false;
 

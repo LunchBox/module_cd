@@ -18,7 +18,7 @@ import {
   mapData,
   player,
   collectedStars,
-  gameOver,
+  lostLife,
   gameStarted,
   freeze,
 } from "./game";
@@ -31,13 +31,13 @@ const MOVING_RATE = 3;
 // 跳躍的瞬間加速
 const JUMPING_RATE = 8;
 
-function checkGameOver() {
+function checkGame() {
   const { x, y } = player.value.position;
   const { w, h } = player.value.shape;
   const { w: mw, h: mh } = mapSize.value;
 
   if (x < 0 || x + w > mw * CELL_SIZE || y < 0 || y + h > mh * CELL_SIZE) {
-    gameOver.value = true;
+    lostLife.value = true;
   }
 }
 
@@ -45,7 +45,7 @@ watch(
   player,
   () => {
     if (!player.value) return;
-    checkGameOver();
+    checkGame();
   },
   { deep: true }
 );
@@ -105,7 +105,7 @@ function interactWithPlatform(rect) {
 
   // 碰到尖刺(player 的 rect 低於 moving block 的頂端就視為碰到尖刺)
   if (y + h > rect.y) {
-    gameOver.value = true;
+    lostLife.value = true;
   }
 }
 
