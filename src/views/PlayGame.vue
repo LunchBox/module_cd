@@ -1,5 +1,12 @@
 <script setup>
-import { ref, computed, onMounted, watch } from "vue";
+import {
+  ref,
+  computed,
+  onMounted,
+  watch,
+  onBeforeUnmount,
+  onUnmounted,
+} from "vue";
 import MapGrid from "./MapGrid.vue";
 
 import { CELL_SIZE } from "./config";
@@ -18,13 +25,13 @@ import { mapData, player, collectedStars, gameOver } from "./game";
 
 const emit = defineEmits(["lost-life"]);
 
+const gameStarted = ref(false);
+
 // 左右移動的瞬間加速
 const MOVING_RATE = 3;
 
 // 跳躍的瞬間加速
 const JUMPING_RATE = 8;
-
-const start = ref(false);
 
 function checkGameOver() {
   const { x, y } = player.value.position;
@@ -98,7 +105,7 @@ function interactWithPlatform(rect) {
   const { x, y } = player.value.position;
   const { w, h } = player.value.shape;
 
-  // 碰到尖刺
+  // 碰到尖刺(player 的 rect 低於 moving block 的頂端就視為碰到尖刺)
   if (y + h > rect.y) {
     gameOver.value = true;
   }
@@ -156,7 +163,7 @@ function move() {
 }
 
 function moveLeft(e) {
-  start.value = true;
+  startGame();
 
   // x 方向不需要加速，只需要設置一個目標速度
   player.value.speed.x = -MOVING_RATE;
@@ -164,7 +171,7 @@ function moveLeft(e) {
 
 // TODO: 和上面重複了，可以優化
 function moveRight(e) {
-  start.value = true;
+  startGame();
 
   player.value.speed.x = MOVING_RATE;
 }
@@ -172,7 +179,7 @@ function moveRight(e) {
 // 每次 keydown 只觸發一次 jump
 let jumped = false;
 function jump(e) {
-  start.value = true;
+  startGame();
 
   if (!jumped) {
     player.value.speed.y += -JUMPING_RATE;
@@ -205,13 +212,40 @@ function keyup(e) {
 useEventListener(document, "keydown", keydown);
 useEventListener(document, "keyup", keyup);
 
+function startGame() {
+  if (gameStarted.value) return;
+  gameStarted.value = true;
+  render();
+}
+
+function pauseGame() {
+  gameStarted.value = false;
+}
+
 function render() {
   move();
-  requestAnimationFrame(render);
+
+  if (gameStarted.value) {
+    requestAnimationFrame(render);
+  }
 }
 
 onMounted(() => {
   render();
+});
+
+onUnmounted(() => {
+  gameStarted.value = false;
+});
+
+useEventListener(document, "keydown", (e) => {
+  if (e.code === "Space") {
+    if (gameStarted.value) {
+      pauseGame();
+    } else {
+      startGame();
+    }
+  }
 });
 
 const playerStyle = computed(() => {
