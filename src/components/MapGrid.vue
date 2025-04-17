@@ -141,7 +141,7 @@ function blockClass(x, y) {
         height: 150px;
         margin-top: -50px;
       }
-      &.moving-preview::before {
+      &.moving-y-preview::before {
         background: #ccc;
         z-index: -1;
       }
