@@ -1,4 +1,5 @@
 <script setup>
+import { MAP_COLS, MAP_ROWS } from "@/libs/config";
 import MovingPlatform from "./MovingPlatform.vue";
 
 const emits = defineEmits([
@@ -17,8 +18,8 @@ function blockClass(x, y) {
 </script>
 <template>
   <div class="game-grid" @contextmenu.prevent>
-    <div v-for="(rows, y) in mapData" :id="y" class="row">
-      <template v-for="(cell, x) in rows">
+    <div v-for="(_, y) in MAP_ROWS" :id="y" class="row">
+      <template v-for="(_, x) in MAP_COLS">
         <div
           class="block"
           :class="blockClass(x, y)"
@@ -28,12 +29,12 @@ function blockClass(x, y) {
           @mouseup.left="$emit('mouseup-on-block', x, y)"
         >
           <MovingPlatform
-            v-if="cell?.type === 'moving'"
-            :data="cell"
+            v-if="mapData[x][y]?.type === 'moving'"
+            :data="mapData[x][y]"
           ></MovingPlatform>
           <MovingPlatform
-            v-if="cell?.type === 'moving-y'"
-            :data="cell"
+            v-if="mapData[x][y]?.type === 'moving-y'"
+            :data="mapData[x][y]"
             :vertical="true"
           ></MovingPlatform>
         </div>

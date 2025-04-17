@@ -41,7 +41,7 @@ export const isAccomplished = computed(() => {
 
 // reset all game status
 export function initGame() {
-  // 應為要移除星星，克隆一份
+  // 要能移除星星，克隆一份
   mapData.value = JSON.parse(JSON.stringify(currentMapData.value));
 
   player.value = manufacturePlayer(mapData);

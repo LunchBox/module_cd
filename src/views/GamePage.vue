@@ -24,7 +24,7 @@ watch(lostLife, () => {
 
   if (lifes.value <= 0) {
     modal.value = "gameOver";
-    // pauseGame();
+    pauseGame();
   }
 });
 
