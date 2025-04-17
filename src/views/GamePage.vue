@@ -2,7 +2,12 @@
 import { ref, watch } from "vue";
 
 import { LEVELS, DEFAULE_LIFES } from "@/libs/config";
-import { lostLife, initGame, isAccomplished } from "@/libs/playingLevel";
+import {
+  lostLife,
+  initGame,
+  isAccomplished,
+  pauseGame,
+} from "@/libs/playingLevel";
 
 import { currentLevel } from "@/libs/entireGame";
 
@@ -61,29 +66,35 @@ initGame();
       Lives:
       <span v-for="i in lifes">❤️</span>
     </div>
+
     <div class="game-wrapper">
       <PlayableLevel></PlayableLevel>
 
-      <div class="modal" v-if="modal === 'gameOver'">
-        <div>
-          Game Over! <br />
-          <button @click="retry">Retry?</button>
-        </div>
+      <div>
+        <button @click="$router.push('/')">Home</button>
+        <button @click="pauseGame">Pause</button>
       </div>
+    </div>
 
-      <div class="modal" v-if="modal === 'nextLevel'">
-        <div>
-          Mission Accomplished! <br />
-          <button @click="nextLevel">Next Level</button>
-        </div>
+    <div class="modal" v-if="modal === 'gameOver'">
+      <div>
+        Game Over! <br />
+        <button @click="retry">Retry?</button>
       </div>
+    </div>
 
-      <div class="modal" v-if="modal === 'gameAccomplished'">
-        <div>
-          You Did IT!!!<br />
-          <input type="text" placeholder="Input Your Name" />
-          <button @click="retry">Submit Ranking</button>
-        </div>
+    <div class="modal" v-if="modal === 'nextLevel'">
+      <div>
+        Mission Accomplished! <br />
+        <button @click="nextLevel">Next Level</button>
+      </div>
+    </div>
+
+    <div class="modal" v-if="modal === 'gameAccomplished'">
+      <div>
+        You Did IT!!!<br />
+        <input type="text" placeholder="Input Your Name" />
+        <button @click="retry">Submit Ranking</button>
       </div>
     </div>
   </div>
