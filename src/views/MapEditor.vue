@@ -30,7 +30,6 @@ import { placeBlock, removeBlock } from "./sceneTools";
 const router = useRouter();
 function toHome() {
   if (!confirm("Map changes are not saved.Doyou want to return?")) return;
-
   router.push({ path: "/" });
 }
 

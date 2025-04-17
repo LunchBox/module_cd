@@ -1,8 +1,9 @@
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed } from "vue";
 import { mapData as originalMapData } from "./useMapEditor";
 import { CELL_SIZE } from "./config";
 
 export const mapData = ref(null);
+
 export const player = ref(null);
 
 export const collectedStars = ref(0);
@@ -13,13 +14,20 @@ export const gameStarted = ref(false);
 
 export const freeze = ref(false);
 
+// reset all game status
 export function initGame() {
   // 應為要移除星星，克隆一份
   mapData.value = JSON.parse(JSON.stringify(originalMapData.value));
 
   player.value = manufacturePlayer(mapData);
 
+  collectedStars.value = 0;
+
   gameOver.value = false;
+
+  gameStarted.value = false;
+
+  freeze.value = true;
 }
 
 // 出生點

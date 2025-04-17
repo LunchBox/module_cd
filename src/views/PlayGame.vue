@@ -1,12 +1,5 @@
 <script setup>
-import {
-  ref,
-  computed,
-  onMounted,
-  watch,
-  onBeforeUnmount,
-  onUnmounted,
-} from "vue";
+import { computed, onMounted, watch, onUnmounted } from "vue";
 import MapGrid from "./MapGrid.vue";
 
 import { CELL_SIZE } from "./config";
