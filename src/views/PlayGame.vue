@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, watch, onUnmounted } from "vue";
-import MapGrid from "./MapGrid.vue";
+import MapGrid from "@/components/MapGrid.vue";
 
 import { CELL_SIZE, MAP_COLS, MAP_ROWS } from "./config";
 import {

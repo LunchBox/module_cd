@@ -1,7 +1,7 @@
 <script setup>
-import { LEVELS } from "./config";
-import { gameData } from "./entireGame";
-import MapGrid from "./MapGrid.vue";
+import { LEVELS } from "../config";
+import { gameData } from "../entireGame";
+import MapGrid from "@/components/MapGrid.vue";
 
 function startGame(lv) {}
 </script>

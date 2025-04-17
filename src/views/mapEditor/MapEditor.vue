@@ -4,7 +4,7 @@ import { useRouter } from "vue-router";
 
 import useEventListener from "../utils/useEventListener";
 
-import MapGrid from "../MapGrid.vue";
+import MapGrid from "@/components/MapGrid.vue";
 
 import { LEVELS, MAP_ROWS, MAP_COLS } from "../config";
 import {
@@ -26,7 +26,7 @@ const tools = Object.freeze({
   remove: "Remove Tool",
 });
 
-import { placeBlock, removeBlock } from "./mapEditorTools";
+import { placeBlock, removeBlock } from "./tools";
 
 const router = useRouter();
 function toHome() {

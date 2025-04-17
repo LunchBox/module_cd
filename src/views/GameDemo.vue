@@ -17,7 +17,7 @@ initGame();
 <template>
   <div>
     <div>
-      <button @click="$router.push('/editor')">Returnto Editor</button>
+      <button @click="$router.push('/editor')">Return to Editor</button>
     </div>
     <h2>
       Demo - Level
