@@ -10,8 +10,11 @@ import {
   levelAccomplished,
 } from "./entireGame";
 
-import { intersect, minMax } from "./utils";
-import useEventListener from "./useEventListener";
+import useEventListener from "./utils/useEventListener";
+
+import intersect from "./utils/useIntersect";
+
+import minMax from "./utils/useMinMax";
 
 import {
   mapData,

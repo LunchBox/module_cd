@@ -1,9 +1,12 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
-import MapGrid from "./MapGrid.vue";
 
-import { LEVELS, MAP_ROWS, MAP_COLS } from "./config";
+import useEventListener from "../utils/useEventListener";
+
+import MapGrid from "../MapGrid.vue";
+
+import { LEVELS, MAP_ROWS, MAP_COLS } from "../config";
 import {
   currentLevel,
   mapData,
@@ -11,9 +14,7 @@ import {
   importData,
   exportData,
   levelAccomplished,
-} from "./entireGame";
-
-import useEventListener from "./useEventListener";
+} from "../entireGame";
 
 const tools = Object.freeze({
   spawn: "Spawn Point",

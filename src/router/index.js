@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
-import MapEditor from "@/views/MapEditor.vue";
+import MapEditor from "@/views/mapEditor/MapEditor.vue";
 import GameDemo from "@/views/GameDemo.vue";
 import InstructionPage from "@/views/InstructionPage.vue";
 import MapPreviewPage from "@/views/MapPreviewPage.vue";
