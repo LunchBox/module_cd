@@ -2,7 +2,7 @@
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 
-import useEventListener from "../utils/useEventListener";
+import useEventListener from "@/utils/useEventListener";
 
 import MapGrid from "@/components/MapGrid.vue";
 
