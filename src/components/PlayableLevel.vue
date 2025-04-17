@@ -15,7 +15,7 @@ import {
   isPaused,
   resumeGame,
   toggleGame,
-} from "@/libs/playingLevel";
+} from "@/stores/playingLevel";
 
 onMounted(resumeGame);
 

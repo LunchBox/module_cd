@@ -1,6 +1,6 @@
 import { ref, computed, watch } from "vue";
 
-import { LEVELS, MAP_COLS, MAP_ROWS } from "@/libs/config";
+import { LEVELS, MAP_COLS, MAP_ROWS } from "@/stores/config";
 
 // entire game data
 export const gameData = ref([...Array(LEVELS)].map(() => initMapData()));

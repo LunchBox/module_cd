@@ -1,5 +1,5 @@
 <script setup>
-import { MAP_COLS, MAP_ROWS } from "@/libs/config";
+import { MAP_COLS, MAP_ROWS } from "@/stores/config";
 import MovingPlatform from "./MovingPlatform.vue";
 
 const emits = defineEmits([

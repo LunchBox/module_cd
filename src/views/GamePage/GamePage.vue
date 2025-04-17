@@ -2,16 +2,16 @@
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 
-import { LEVELS, DEFAULE_LIFES } from "@/libs/config";
+import { LEVELS, DEFAULE_LIFES } from "@/stores/config";
 import {
   initGame,
   isAccomplished,
   pauseGame,
   resumeGame,
   lostLife,
-} from "@/libs/playingLevel";
+} from "@/stores/playingLevel";
 
-import { currentLevel } from "@/libs/entireGame";
+import { currentLevel } from "@/stores/entireGame";
 
 import PlayableLevel from "@/components/PlayableLevel.vue";
 

@@ -2,9 +2,9 @@
 import { watch } from "vue";
 import PlayableLevel from "@/components/PlayableLevel.vue";
 
-import { currentLevel, levelAccomplished } from "@/libs/entireGame";
+import { currentLevel, levelAccomplished } from "@/stores/entireGame";
 
-import { initGame, lostLife } from "@/libs/playingLevel";
+import { initGame, lostLife } from "@/stores/playingLevel";
 
 // 一丟命就 reset game
 watch(lostLife, () => {

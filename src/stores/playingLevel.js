@@ -6,13 +6,13 @@ import {
   MAP_ROWS,
   MOVING_RATE,
   DEFAULT_JUMP_RATE,
-} from "@/libs/config";
+} from "@/stores/config";
 
 import {
   mapData as currentMapData,
   currentLevel,
   accomplishedLevels,
-} from "@/libs/entireGame";
+} from "@/stores/entireGame";
 
 import intersect from "@/utils/useIntersect";
 import minMax from "@/utils/useMinMax";
