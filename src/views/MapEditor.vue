@@ -25,7 +25,7 @@ const tools = Object.freeze({
   remove: "Remove Tool",
 });
 
-import { placeBlock, removeBlock } from "./sceneTools";
+import { placeBlock, removeBlock } from "./mapEditorTools";
 
 const router = useRouter();
 function toHome() {
