@@ -1,5 +1,5 @@
 <script setup>
-import { mapSize } from "./useMapEditor";
+import { mapSize } from "./entireGame";
 
 import MovingPlatform from "./MovingPlatform.vue";
 

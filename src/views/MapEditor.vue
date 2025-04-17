@@ -12,7 +12,7 @@ import {
   importData,
   exportData,
   levelAccomplished,
-} from "./useMapEditor";
+} from "./entireGame";
 import useEventListener from "./useEventListener";
 
 const tools = Object.freeze({

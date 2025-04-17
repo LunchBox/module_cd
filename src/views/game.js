@@ -1,5 +1,5 @@
 import { ref, computed } from "vue";
-import { mapData as currentMapData } from "./useMapEditor";
+import { mapData as currentMapData } from "./entireGame";
 import { CELL_SIZE } from "./config";
 
 // 正在 play 中的 map

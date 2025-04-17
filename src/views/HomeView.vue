@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from "vue-router";
-import { importData } from "./useMapEditor";
+import { importData } from "./entireGame";
 
 const router = useRouter();
 async function loadData() {

@@ -9,7 +9,7 @@ import {
   accomplishedLevels,
   levelAccomplished,
   mapSize,
-} from "./useMapEditor";
+} from "./entireGame";
 
 import { intersect, minMax } from "./utils";
 import useEventListener from "./useEventListener";
@@ -277,22 +277,15 @@ const playerStyle = computed(() => {
 
 <template>
   <div>
-    <div>
-      <header>
-        <h2>
-          <span v-if="levelAccomplished"> !!! Accomplished !!!</span>
-        </h2>
-      </header>
-      <div class="game">
-        <MapGrid :mapData="mapData"></MapGrid>
-        <div v-if="player" class="player" :style="playerStyle"></div>
-      </div>
-      Collected Stars: {{ collectedStars }} <br />
-      {{ isAccomplished }}
-      Ac Levels: {{ [...accomplishedLevels] }} <br />
-      {{ player }} <br />
-      {{ playerStyle }} <br />
+    <div class="game">
+      <MapGrid :mapData="mapData"></MapGrid>
+      <div v-if="player" class="player" :style="playerStyle"></div>
     </div>
+    Collected Stars: {{ collectedStars }} <br />
+    {{ isAccomplished }}
+    Ac Levels: {{ [...accomplishedLevels] }} <br />
+    {{ player }} <br />
+    {{ playerStyle }} <br />
   </div>
 </template>
 

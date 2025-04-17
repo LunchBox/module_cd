@@ -5,7 +5,7 @@ import { LEVELS, MAP_H, MAP_W } from "./config";
 // incase ...
 export const mapSize = ref({ w: MAP_W, h: MAP_H });
 
-// ---- game info
+// entire game data
 export const gameData = ref([...Array(LEVELS)].map(() => initMapData()));
 
 export const currentLevel = ref(0);

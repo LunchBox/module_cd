@@ -3,7 +3,7 @@ import { ref, watch } from "vue";
 
 import { LEVELS, DEFAULE_LIFES } from "./config";
 import { lostLife, initGame, isAccomplished } from "./game";
-import { currentLevel } from "./useMapEditor";
+import { currentLevel } from "./entireGame";
 
 import PlayGame from "./PlayGame.vue";
 

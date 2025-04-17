@@ -2,7 +2,7 @@
 import { watch } from "vue";
 import PlayGame from "./PlayGame.vue";
 
-import { currentLevel } from "./useMapEditor";
+import { currentLevel, levelAccomplished } from "./entireGame";
 
 import { lostLife, initGame } from "./game";
 
@@ -22,6 +22,8 @@ initGame();
     <h2>
       Demo - Level
       {{ currentLevel }}
+
+      <span v-if="levelAccomplished"> !!! Accomplished !!!</span>
     </h2>
     <PlayGame></PlayGame>
   </div>
