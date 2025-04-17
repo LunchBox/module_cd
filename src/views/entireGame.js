@@ -1,9 +1,6 @@
 import { ref, computed, watch } from "vue";
 
-import { LEVELS, MAP_H, MAP_W } from "./config";
-
-// incase ...
-export const mapSize = ref({ w: MAP_W, h: MAP_H });
+import { LEVELS, MAP_COLS, MAP_ROWS } from "./config";
 
 // entire game data
 export const gameData = ref([...Array(LEVELS)].map(() => initMapData()));
@@ -28,8 +25,7 @@ watch(
 );
 
 function initMapData() {
-  const { w, h } = mapSize.value;
-  return [...Array(h)].map(() => Array(w));
+  return [...Array(MAP_ROWS)].map(() => Array(MAP_COLS));
 }
 
 export function toLevel(lv) {

@@ -2,13 +2,12 @@
 import { ref, computed, onMounted, watch, onUnmounted } from "vue";
 import MapGrid from "./MapGrid.vue";
 
-import { CELL_SIZE } from "./config";
+import { CELL_SIZE, MAP_COLS, MAP_ROWS } from "./config";
 import {
   currentLevel,
   mapData as originalMapData,
   accomplishedLevels,
   levelAccomplished,
-  mapSize,
 } from "./entireGame";
 
 import { intersect, minMax } from "./utils";
@@ -35,9 +34,13 @@ const jumpRate = ref(DEFAULT_JUMP_RATE);
 function checkBorders() {
   if (!player.value) return;
   const { x, y, w, h } = player.value;
-  const { w: mw, h: mh } = mapSize.value;
 
-  if (x < 0 || x + w > mw * CELL_SIZE || y < 0 || y + h > mh * CELL_SIZE) {
+  if (
+    x < 0 ||
+    x + w > MAP_COLS * CELL_SIZE ||
+    y < 0 ||
+    y + h > MAP_ROWS * CELL_SIZE
+  ) {
     lostLife.value = true;
   }
 }

@@ -3,9 +3,8 @@ import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import MapGrid from "./MapGrid.vue";
 
-import { LEVELS } from "./config";
+import { LEVELS, MAP_ROWS, MAP_COLS } from "./config";
 import {
-  mapSize,
   currentLevel,
   mapData,
   toLevel,
@@ -13,6 +12,7 @@ import {
   exportData,
   levelAccomplished,
 } from "./entireGame";
+
 import useEventListener from "./useEventListener";
 
 const tools = Object.freeze({
@@ -137,7 +137,7 @@ function available(x, y) {
   }
 
   //左右邊界不能放 moving
-  if (selectedTool.value === "moving" && (x <= 0 || x >= mapSize.value.w - 1)) {
+  if (selectedTool.value === "moving" && (x <= 0 || x >= MAP_COLS - 1)) {
     return false;
   }
 
@@ -150,10 +150,7 @@ function available(x, y) {
   }
 
   // 上下邊界不能放 moving-y
-  if (
-    selectedTool.value === "moving-y" &&
-    (y <= 0 || y >= mapSize.value.h - 1)
-  ) {
+  if (selectedTool.value === "moving-y" && (y <= 0 || y >= MAP_ROWS - 1)) {
     return false;
   }
 
