@@ -12,7 +12,10 @@ export function placeBlock(map, type, x, y) {
       break;
     case "sloped":
       map[x][y] = { type: "sloped" };
-      map[x - 1][y] = "sloped-left";
+
+      if (!map[x - 1][y]) {
+        map[x - 1][y] = { type: "placeholder", allow: ["star"] };
+      }
       break;
     default:
       map[x][y] = { type };
@@ -35,6 +38,10 @@ export function removeBlock(map, x, y) {
       break;
     case "sloped":
       map[x][y] = null;
+
+      if (map[x - 1][y] && map[x - 1][y].type === "placeholder") {
+        map[x - 1][y] = null;
+      }
       break;
     default:
       map[x][y] = null;

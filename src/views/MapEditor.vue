@@ -120,17 +120,17 @@ const draggingPath = computed(() => {
 
 // cell 是否能夠放置當前的 tool
 function available(x, y) {
-  if (mapData.value[x][y]) return false;
-
-  // 右側是斜坡不能放除了星星之外的東西
-  if (mapData.value[x + 1]?.[y] === "sloped" && selectedTool.value !== "star") {
+  if (
+    mapData.value[x][y] &&
+    !mapData.value[x][y].allow?.includes(selectedTool.value)
+  ) {
     return false;
   }
 
   // 左側不是星星不能放斜坡
   if (
     mapData.value[x - 1]?.[y] &&
-    mapData.value[x - 1]?.[y] !== "star" &&
+    mapData.value[x - 1]?.[y]?.type !== "star" &&
     selectedTool.value === "sloped"
   ) {
     return false;
