@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, watch, onUnmounted } from "vue";
+import { ref, computed, onMounted, watch, onUnmounted } from "vue";
 import MapGrid from "./MapGrid.vue";
 
 import { CELL_SIZE } from "./config";
@@ -29,7 +29,8 @@ const emit = defineEmits(["lost-life"]);
 const MOVING_RATE = 3;
 
 // 跳躍的瞬間加速
-const JUMPING_RATE = 8;
+const DEFAULT_JUMP_RATE = 8;
+const jumpRate = ref(DEFAULT_JUMP_RATE);
 
 function checkGame() {
   const { x, y } = player.value.position;
@@ -103,6 +104,16 @@ const allRects = computed(() => {
   return rects;
 });
 
+function interactWithJump(rect) {
+  const { x, y } = player.value.position;
+  const { w, h } = player.value.shape;
+
+  // 站在 jump 上面
+  if (y + h > rect.y - 1) {
+    jumpRate.value = DEFAULT_JUMP_RATE * 2;
+  }
+}
+
 function interactWithPlatform(rect) {
   const { x, y } = player.value.position;
   const { w, h } = player.value.shape;
@@ -132,10 +143,15 @@ function checkBlocked(shape) {
           interactWithPlatform(rect);
           coll = true;
           break;
+        case "jump":
+          interactWithJump(rect);
+          coll = true;
+          break;
         case "star":
           collectStar(rect.gx, rect.gy);
           break;
         default:
+          jumpRate.value = DEFAULT_JUMP_RATE;
           coll = true;
       }
     }
@@ -169,6 +185,8 @@ function move() {
   // gravity
   player.value.speed.y += 9.8 / 20;
   player.value.speed.y = minMax(player.value.speed.y, -10, 10);
+
+  // if (speedX !== 0) player.value.speed.x += speedX > 0 ? -1 : 1;
 }
 
 function moveLeft(e) {
@@ -191,7 +209,7 @@ function jump(e) {
   resumeGame();
 
   if (!jumped) {
-    player.value.speed.y += -JUMPING_RATE;
+    player.value.speed.y += -jumpRate.value;
 
     // 速度太快會飛出去，限制 minmax
     player.value.speed.y = minMax(player.value.speed.y, -10, 10);
