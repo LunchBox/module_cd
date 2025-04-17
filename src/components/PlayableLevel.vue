@@ -2,19 +2,19 @@
 import { ref, computed, onMounted, watch, onUnmounted } from "vue";
 import MapGrid from "@/components/MapGrid.vue";
 
-import { CELL_SIZE, MAP_COLS, MAP_ROWS } from "./config";
+import { CELL_SIZE, MAP_COLS, MAP_ROWS } from "@/libs/config";
 import {
   currentLevel,
   mapData as originalMapData,
   accomplishedLevels,
   levelAccomplished,
-} from "./entireGame";
+} from "@/libs/entireGame";
 
-import useEventListener from "./utils/useEventListener";
+import useEventListener from "@/views/utils/useEventListener";
 
-import intersect from "./utils/useIntersect";
+import intersect from "@/views/utils/useIntersect";
 
-import minMax from "./utils/useMinMax";
+import minMax from "@/views/utils/useMinMax";
 
 import {
   mapData,
@@ -24,7 +24,7 @@ import {
   lostLife,
   gameStarted,
   freeze,
-} from "./game";
+} from "@/libs/playingLevel";
 
 // 左右移動的瞬間加速
 const MOVING_RATE = 3;

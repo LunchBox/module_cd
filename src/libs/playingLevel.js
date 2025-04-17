@@ -1,6 +1,6 @@
 import { ref, computed } from "vue";
-import { mapData as currentMapData } from "./entireGame";
-import { CELL_SIZE } from "./config";
+import { mapData as currentMapData } from "@/libs/entireGame";
+import { CELL_SIZE } from "@/libs/config";
 
 // 正在 play 中的 map
 export const mapData = ref(null);

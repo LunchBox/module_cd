@@ -1,6 +1,6 @@
 <script setup>
-import { LEVELS } from "../config";
-import { gameData } from "../entireGame";
+import { LEVELS } from "@/libs/config";
+import { gameData } from "@/libs/entireGame";
 import MapGrid from "@/components/MapGrid.vue";
 
 function startGame(lv) {}

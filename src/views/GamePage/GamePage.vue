@@ -1,12 +1,12 @@
 <script setup>
 import { ref, watch } from "vue";
 
-import { LEVELS, DEFAULE_LIFES } from "../config";
-import { lostLife, initGame, isAccomplished } from "../game";
+import { LEVELS, DEFAULE_LIFES } from "@/libs/config";
+import { lostLife, initGame, isAccomplished } from "@/libs/playingLevel";
 
-import { currentLevel } from "../entireGame";
+import { currentLevel } from "@/libs/entireGame";
 
-import PlayGame from "../PlayGame.vue";
+import PlayableLevel from "@/components/PlayableLevel.vue";
 
 currentLevel.value = 0;
 
@@ -62,7 +62,7 @@ initGame();
       <span v-for="i in lifes">❤️</span>
     </div>
     <div class="game-wrapper">
-      <PlayGame></PlayGame>
+      <PlayableLevel></PlayableLevel>
 
       <div class="modal" v-if="modal === 'gameOver'">
         <div>

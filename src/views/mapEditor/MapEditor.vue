@@ -6,7 +6,7 @@ import useEventListener from "../utils/useEventListener";
 
 import MapGrid from "@/components/MapGrid.vue";
 
-import { LEVELS, MAP_ROWS, MAP_COLS } from "../config";
+import { LEVELS, MAP_ROWS, MAP_COLS } from "@/libs/config";
 import {
   currentLevel,
   mapData,
@@ -14,7 +14,7 @@ import {
   importData,
   exportData,
   levelAccomplished,
-} from "../entireGame";
+} from "@/libs/entireGame";
 
 const tools = Object.freeze({
   spawn: "Spawn Point",

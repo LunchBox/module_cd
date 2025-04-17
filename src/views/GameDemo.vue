@@ -1,10 +1,10 @@
 <script setup>
 import { watch } from "vue";
-import PlayGame from "./PlayGame.vue";
+import PlayableLevel from "@/components/PlayableLevel.vue";
 
-import { currentLevel, levelAccomplished } from "./entireGame";
+import { currentLevel, levelAccomplished } from "@/libs/entireGame";
 
-import { lostLife, initGame } from "./game";
+import { lostLife, initGame } from "@/libs/playingLevel";
 
 watch(lostLife, () => {
   if (lostLife.value) {
@@ -25,6 +25,6 @@ initGame();
 
       <span v-if="levelAccomplished"> !!! Accomplished !!!</span>
     </h2>
-    <PlayGame></PlayGame>
+    <PlayableLevel></PlayableLevel>
   </div>
 </template>

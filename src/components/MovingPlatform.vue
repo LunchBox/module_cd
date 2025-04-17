@@ -1,9 +1,9 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
 
-import { CELL_SIZE } from "@/views/config";
+import { CELL_SIZE } from "@/libs/config";
 
-import { freeze } from "@/views/game";
+import { freeze } from "@/libs/playingLevel";
 
 const props = defineProps(["data", "vertical"]);
 
