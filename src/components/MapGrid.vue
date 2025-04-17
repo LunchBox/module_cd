@@ -108,8 +108,8 @@ function blockClass(x, y) {
       }
 
       /* 出生點 */
-      &.spawn::after,
-      &.spawn-preview::after {
+      &.spawn::before,
+      &.spawn-preview::before {
         content: "💫";
         position: absolute;
         width: 100%;
@@ -121,7 +121,7 @@ function blockClass(x, y) {
       &.spawn-preview {
         opacity: 0.5;
 
-        &.taken::after {
+        &.taken::before {
           background-color: tomato;
         }
       }

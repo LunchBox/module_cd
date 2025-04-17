@@ -123,7 +123,7 @@ const draggingPath = computed(() => {
 function available(x, y) {
   if (
     mapData.value[x][y] &&
-    !mapData.value[x][y].allow?.includes(selectedTool.value)
+    !mapData.value[x][y].allows?.includes(selectedTool.value)
   ) {
     return false;
   }
