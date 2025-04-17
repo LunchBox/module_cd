@@ -25,8 +25,8 @@ export const player = ref(null);
 
 export const collectedStars = ref(0);
 
-// 遊戲是否已開始
-export const gameStarted = ref(false);
+// 是否暫停
+export const isPaused = ref(false);
 
 // 用於外界監聽 life change
 export const lostLife = ref(false);
@@ -50,9 +50,9 @@ export function initGame() {
 
   lostLife.value = false;
 
-  gameStarted.value = false;
-
   freeze.value = false;
+
+  isPaused.value = false;
 }
 
 // 出生點
@@ -205,6 +205,8 @@ function checkBlocked(shape) {
 }
 
 function renderFrame() {
+  if (!player.value) return;
+
   const { x, y, w, h, speedX, speedY } = player.value;
 
   // 預計前往的 x
@@ -229,16 +231,12 @@ function renderFrame() {
 }
 
 function moveLeft(e) {
-  resumeGame();
-
   // x 方向不需要加速，只需要設置一個目標速度
   player.value.speedX = -MOVING_RATE;
 }
 
 // TODO: 和上面重複了，可以優化
 function moveRight(e) {
-  resumeGame();
-
   player.value.speedX = MOVING_RATE;
 }
 
@@ -246,8 +244,6 @@ function moveRight(e) {
 let jumped = false;
 let jumpRate = DEFAULT_JUMP_RATE;
 function jump(e) {
-  resumeGame();
-
   if (!jumped) {
     player.value.speedY += -jumpRate;
 
@@ -278,31 +274,32 @@ export function keydown(e) {
   }
 }
 
-function render() {
-  renderFrame();
-  if (gameStarted.value) {
-    requestAnimationFrame(render);
-  }
-}
-
 // 繼續遊戲
 export function resumeGame() {
-  if (gameStarted.value) return;
-  gameStarted.value = true;
+  isPaused.value = false;
   freeze.value = false;
-  render();
 }
 
 // 暫停遊戲
 export function pauseGame() {
-  gameStarted.value = false;
+  isPaused.value = true;
   freeze.value = true;
 }
 
 export function toggleGame(e) {
-  if (gameStarted.value) {
-    pauseGame();
-  } else {
+  if (isPaused.value) {
     resumeGame();
+  } else {
+    pauseGame();
   }
 }
+
+// 整個 app 共用一個 render 、requestAnimationFrame
+function render() {
+  if (!isPaused.value) {
+    renderFrame();
+  }
+
+  requestAnimationFrame(render);
+}
+render();

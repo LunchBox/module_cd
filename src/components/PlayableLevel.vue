@@ -9,10 +9,10 @@ import {
   player,
   collectedStars,
   isAccomplished,
-  gameStarted,
   freeze,
   keyup,
   keydown,
+  isPaused,
   resumeGame,
   toggleGame,
 } from "@/libs/playingLevel";
@@ -21,7 +21,7 @@ onMounted(resumeGame);
 
 // 記得在離開時暫停 game，但取消 freeze，否則 map 預覽頁面的 moving platform 不會動
 onUnmounted(() => {
-  gameStarted.value = false;
+  isPaused.value = true;
   freeze.value = false;
 });
 
@@ -31,7 +31,7 @@ useEventListener(document, "keydown", keydown);
 
 // 空格暫停和繼續遊戲
 useEventListener(document, "keydown", (e) => {
-  if (e.keyCode === "Space") toggleGame();
+  if (e.code === "Space") toggleGame();
 });
 
 const playerStyle = computed(() => {

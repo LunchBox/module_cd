@@ -8,6 +8,8 @@ import { initGame, lostLife } from "@/libs/playingLevel";
 
 // 一丟命就 reset game
 watch(lostLife, () => {
+  if (!lostLife.value) return;
+
   initGame();
 });
 

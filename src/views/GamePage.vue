@@ -20,16 +20,27 @@ currentLevel.value = 0;
 const modal = ref(null);
 
 watch(lostLife, () => {
+  // 只看 lostLife.value = true
+  // initGame 時會將 lostLife.value 轉回 false，這裡會也觸發一次，但 false 可以不用處理
+  if (!lostLife.value) return;
+
   lifes.value -= 1;
+  pauseGame();
 
   if (lifes.value <= 0) {
     modal.value = "gameOver";
-    pauseGame();
+  } else {
+    initGame();
   }
 });
 
 watch(isAccomplished, () => {
-  if (currentLevel.value >= LEVELS) {
+  // 只看 isAccomplished.value = true
+  if (!isAccomplished.value) return;
+
+  pauseGame();
+
+  if (currentLevel.value >= LEVELS - 1) {
     modal.value = "gameAccomplished";
   } else {
     modal.value = "nextLevel";
@@ -37,9 +48,9 @@ watch(isAccomplished, () => {
 });
 
 function nextLevel() {
+  modal.value = null;
   currentLevel.value += 1;
   initGame();
-  modal.value = null;
 }
 
 function retry() {
@@ -85,7 +96,7 @@ initGame();
 
     <div class="modal" v-if="modal === 'nextLevel'">
       <div>
-        Mission Accomplished! <br />
+        Level {{ currentLevel }} Accomplished! <br />
         <button @click="nextLevel">Next Level</button>
       </div>
     </div>
