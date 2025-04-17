@@ -1,15 +1,12 @@
 <script setup>
 import { ref, watch } from "vue";
 
-import PlayGame from "./PlayGame.vue";
-
-import { LEVELS } from "./config";
-
+import { LEVELS, DEFAULE_LIFES } from "./config";
 import { lostLife, initGame, isAccomplished } from "./game";
-
 import { currentLevel } from "./useMapEditor";
 
-const DEFAULE_LIFES = 3;
+import PlayGame from "./PlayGame.vue";
+
 const lifes = ref(DEFAULE_LIFES);
 
 const modal = ref(null);
