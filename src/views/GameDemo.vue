@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import MapGrid from "./MapGrid.vue";
 
 import { CELL_SIZE } from "./config";
@@ -8,6 +8,7 @@ import {
   mapData as originalMapData,
   accomplishedLevels,
   levelAccomplished,
+  mapSize,
 } from "./useMapEditor";
 
 import { intersect, minMax } from "./utils";
@@ -20,10 +21,46 @@ const MOVING_RATE = 3;
 const JUMPING_RATE = 8;
 
 // 應為要移除星星，克隆一份
-const mapData = ref(JSON.parse(JSON.stringify(originalMapData.value)));
+const mapData = ref(null);
+const player = ref(null);
 
 const collectedStars = ref(0);
 const start = ref(false);
+
+const gameOver = ref(false);
+
+function initGame() {
+  mapData.value = JSON.parse(JSON.stringify(originalMapData.value));
+  player.value = manufacturePlayer(mapData);
+
+  gameOver.value = false;
+}
+
+watch(gameOver, () => {
+  if (gameOver.value) {
+    alert("Game Over!");
+    initGame();
+  }
+});
+
+function checkGameOver() {
+  const { x, y } = player.value.position;
+  const { w, h } = player.value.shape;
+  const { w: mw, h: mh } = mapSize.value;
+
+  if (x < 0 || x + w > mw * CELL_SIZE || y < 0 || y + h > mh * CELL_SIZE) {
+    gameOver.value = true;
+  }
+}
+
+watch(
+  player,
+  () => {
+    if (!player.value) return;
+    checkGameOver();
+  },
+  { deep: true }
+);
 
 // 出生點
 const spawnPoint = computed(() => {
@@ -44,8 +81,6 @@ const isAccomplished = computed(() => {
   const stars = originalMapData.value.flat().filter((v) => v?.type === "star");
   return collectedStars.value === stars.length;
 });
-
-const player = ref(manufacturePlayer(mapData));
 
 function collectStar(tx, ty) {
   collectedStars.value += 1;
@@ -89,18 +124,18 @@ const allRects = computed(() => {
   return rects;
 });
 
-console.log(allRects.value);
-
 function checkBlocked(shape) {
   let coll = false;
 
   // TODO: should find the destination blocks first
   allRects.value.forEach((rect) => {
     if (intersect(shape, rect)) {
-      if (rect?.type === "star") {
-        collectStar(rect.gx, rect.gy);
-      } else {
-        coll = true;
+      switch (rect.type) {
+        case "star":
+          collectStar(rect.gx, rect.gy);
+          break;
+        default:
+          coll = true;
       }
     }
   });
@@ -194,6 +229,7 @@ onMounted(() => {
   render();
 });
 
+initGame();
 // player 工廠
 function manufacturePlayer() {
   return {
