@@ -76,7 +76,7 @@ const allRects = computed(() => {
       if (cell?.type === "spawn") return;
 
       // 移動平台的前後上下不用檢查是否碰撞
-      if (cell?.type?.startsWith("moving-")) return;
+      if (cell?.type === "placeholder") return;
 
       const rect = {
         type: cell.type,
@@ -92,6 +92,10 @@ const allRects = computed(() => {
         rect.x += cell.offset;
       }
 
+      if (cell?.type === "moving-y") {
+        rect.y += cell.offset;
+      }
+
       rects.push(rect);
     });
   });
@@ -104,8 +108,15 @@ function interactWithPlatform(rect) {
   const { w, h } = player.value.shape;
 
   // 碰到尖刺(player 的 rect 低於 moving block 的頂端就視為碰到尖刺)
-  if (y + h > rect.y) {
+  if (y + h > rect.y + 2) {
+    // +2 避免一碰到就判定為碰到尖刺
     lostLife.value = true;
+  } else {
+    // move the player
+    // 暫時只做到抬高 player
+    if (rect.type === "moving-y") {
+      player.value.position.y = rect.y - h;
+    }
   }
 }
 
