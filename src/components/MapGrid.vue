@@ -10,6 +10,7 @@ const emits = defineEmits([
 
 const props = defineProps(["level", "mapData", "blockClass"]);
 
+// function 也可以作為 props 傳遞
 function blockClass(x, y) {
   return props.blockClass instanceof Function
     ? props.blockClass(x, y)
@@ -55,8 +56,10 @@ function blockClass(x, y) {
     .block {
       width: 50px;
       height: 50px;
-      border: 1px solid #ccc;
+      border: 1px solid #eee;
       position: relative;
+
+      /* 所有 block 用 ::before, .preview.taken 用 ::after */
 
       &.base::before,
       &.base-preview::before {

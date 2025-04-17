@@ -72,7 +72,7 @@ const playerStyle = computed(() => {
   position: absolute;
   border: 1px solid blue;
 
-  &::after {
+  &::before {
     content: "🏃🏻‍♂️";
     position: absolute;
     width: 100%;

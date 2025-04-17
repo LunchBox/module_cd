@@ -52,5 +52,7 @@ const blockStyle = computed(() => {
   left: 0;
 
   background: #333;
+
+  z-index: 10;
 }
 </style>
