@@ -1,17 +1,26 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 
 import { LEVELS, DEFAULE_LIFES } from "@/libs/config";
 import {
   initGame,
   isAccomplished,
   pauseGame,
+  resumeGame,
   lostLife,
 } from "@/libs/playingLevel";
 
 import { currentLevel } from "@/libs/entireGame";
 
 import PlayableLevel from "@/components/PlayableLevel.vue";
+
+import {
+  timer,
+  formattedTime,
+  startTimer,
+  stopTimer,
+  resetTimer,
+} from "./timer";
 
 const lifes = ref(DEFAULE_LIFES);
 
@@ -25,12 +34,13 @@ watch(lostLife, () => {
   if (!lostLife.value) return;
 
   lifes.value -= 1;
-  pauseGame();
+  onPause();
 
   if (lifes.value <= 0) {
     modal.value = "gameOver";
   } else {
     initGame();
+    onResume();
   }
 });
 
@@ -38,7 +48,7 @@ watch(isAccomplished, () => {
   // 只看 isAccomplished.value = true
   if (!isAccomplished.value) return;
 
-  pauseGame();
+  onPause();
 
   if (currentLevel.value >= LEVELS - 1) {
     modal.value = "gameAccomplished";
@@ -51,6 +61,7 @@ function nextLevel() {
   modal.value = null;
   currentLevel.value += 1;
   initGame();
+  onResume();
 }
 
 function retry() {
@@ -58,9 +69,22 @@ function retry() {
   currentLevel.value = 0;
   modal.value = null;
   initGame();
+  resetTimer();
+  onResume();
+}
+
+function onPause() {
+  stopTimer();
+  pauseGame();
+}
+
+function onResume() {
+  resumeGame();
+  startTimer();
 }
 
 initGame();
+startTimer();
 </script>
 <template>
   <div>
@@ -76,6 +100,8 @@ initGame();
       <template v-if="lifes >= 0">
         <span v-for="i in lifes">❤️</span>
       </template>
+
+      {{ formattedTime }}
     </div>
 
     <div class="game-wrapper">
@@ -83,7 +109,8 @@ initGame();
 
       <div>
         <button @click="$router.push('/')">Home</button>
-        <button @click="pauseGame">Pause</button>
+        <button @click="onPause">Pause</button>
+        <button @click="onResume">Resume</button>
       </div>
     </div>
 
