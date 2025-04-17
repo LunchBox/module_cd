@@ -74,8 +74,8 @@ const spawnPoint = computed(() => {
 function manufacturePlayer() {
   return {
     ...spawnPoint.value,
-    w: 50,
-    h: 50,
+    w: 48, // 稍微小一些才能從兩個 block 之間掉落
+    h: 48,
     speedX: 0,
     speedY: 0,
   };
