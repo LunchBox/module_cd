@@ -3,10 +3,10 @@ import HomeView from "@/views/HomeView.vue";
 import MapEditor from "@/views/MapEditor/MapEditor.vue";
 import GameDemo from "@/views/GameDemo.vue";
 import InstructionPage from "@/views/InstructionPage.vue";
-import MapPreviewPage from "@/views/MapPreviewPage/MapPreviewPage.vue";
+import MapPreviewPage from "@/views/MapPreviewPage.vue";
 import ModuleD from "@/views/ModuleD.vue";
 import RanksPage from "@/views/RanksPage.vue";
-import GamePage from "@/views/GamePage/GamePage.vue";
+import GamePage from "@/views/GamePage.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
