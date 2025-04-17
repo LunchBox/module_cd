@@ -1,6 +1,13 @@
 import { ref, computed, watch } from "vue";
 
-import { CELL_SIZE, MAP_COLS, MAP_ROWS } from "@/libs/config";
+import {
+  CELL_SIZE,
+  MAP_COLS,
+  MAP_ROWS,
+  MOVING_RATE,
+  DEFAULT_JUMP_RATE,
+} from "@/libs/config";
+
 import {
   mapData as currentMapData,
   currentLevel,
@@ -10,17 +17,19 @@ import {
 import intersect from "@/utils/useIntersect";
 import minMax from "@/utils/useMinMax";
 
-// 正在 play 中的 map
+// 正在 play 中的 map，export 出去用於顯示
+// 這裡放的是 clone 過的 currentMapData, 避免直接修改地圖數據
 export const mapData = ref(null);
 
 export const player = ref(null);
 
 export const collectedStars = ref(0);
 
-export const lostLife = ref(false);
-
 // 遊戲是否已開始
 export const gameStarted = ref(false);
+
+// 用於外界監聽 life change
+export const lostLife = ref(false);
 
 // 凍住 moving platform
 export const freeze = ref(false);
@@ -43,7 +52,7 @@ export function initGame() {
 
   gameStarted.value = false;
 
-  freeze.value = true;
+  freeze.value = false;
 }
 
 // 出生點
@@ -71,13 +80,6 @@ function manufacturePlayer() {
     speedY: 0,
   };
 }
-
-// 左右移動的瞬間加速
-const MOVING_RATE = 3;
-
-// 跳躍的瞬間加速
-const DEFAULT_JUMP_RATE = 8;
-const jumpRate = ref(DEFAULT_JUMP_RATE);
 
 // 檢查邊界，如果 player 碰到邊界視為 lost life
 function checkBorders() {
@@ -151,7 +153,7 @@ function interactWithJump(rect) {
 
   // 站在 jump 上面
   if (y + h > rect.y - 1) {
-    jumpRate.value = DEFAULT_JUMP_RATE * 2;
+    jumpRate = DEFAULT_JUMP_RATE * 2;
   }
 }
 
@@ -193,7 +195,7 @@ function checkBlocked(shape) {
           // star 可以被拾取后穿過
           break;
         default:
-          jumpRate.value = DEFAULT_JUMP_RATE;
+          jumpRate = DEFAULT_JUMP_RATE;
           coll = true;
       }
     }
@@ -242,11 +244,12 @@ function moveRight(e) {
 
 // 每次 keydown 只觸發一次 jump
 let jumped = false;
+let jumpRate = DEFAULT_JUMP_RATE;
 function jump(e) {
   resumeGame();
 
   if (!jumped) {
-    player.value.speedY += -jumpRate.value;
+    player.value.speedY += -jumpRate;
 
     // 速度太快會飛出去，限制 minmax
     player.value.speedY = minMax(player.value.speedY, -10, 10);

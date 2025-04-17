@@ -2,13 +2,6 @@
 import { ref, computed, onMounted, watch, onUnmounted } from "vue";
 import MapGrid from "@/components/MapGrid.vue";
 
-import { CELL_SIZE, MAP_COLS, MAP_ROWS } from "@/libs/config";
-import {
-  currentLevel,
-  mapData as originalMapData,
-  levelAccomplished,
-} from "@/libs/entireGame";
-
 import useEventListener from "@/utils/useEventListener";
 
 import {
@@ -16,7 +9,6 @@ import {
   player,
   collectedStars,
   isAccomplished,
-  lostLife,
   gameStarted,
   freeze,
   keyup,
@@ -27,7 +19,7 @@ import {
 
 onMounted(resumeGame);
 
-// 記得在離開時暫停 game
+// 記得在離開時暫停 game，但取消 freeze，否則 map 預覽頁面的 moving platform 不會動
 onUnmounted(() => {
   gameStarted.value = false;
   freeze.value = false;

@@ -3,30 +3,28 @@ import { ref, watch } from "vue";
 
 import { LEVELS, DEFAULE_LIFES } from "@/libs/config";
 import {
-  lostLife,
   initGame,
   isAccomplished,
   pauseGame,
+  lostLife,
 } from "@/libs/playingLevel";
 
 import { currentLevel } from "@/libs/entireGame";
 
 import PlayableLevel from "@/components/PlayableLevel.vue";
 
-currentLevel.value = 0;
-
 const lifes = ref(DEFAULE_LIFES);
+
+currentLevel.value = 0;
 
 const modal = ref(null);
 
 watch(lostLife, () => {
-  if (lostLife.value) {
-    lifes.value -= 1;
-    if (lifes.value <= 0) {
-      modal.value = "gameOver";
-    }
+  lifes.value -= 1;
 
-    initGame();
+  if (lifes.value <= 0) {
+    modal.value = "gameOver";
+    // pauseGame();
   }
 });
 
@@ -64,7 +62,9 @@ initGame();
 
     <div>
       Lives:
-      <span v-for="i in lifes">❤️</span>
+      <template v-if="lifes >= 0">
+        <span v-for="i in lifes">❤️</span>
+      </template>
     </div>
 
     <div class="game-wrapper">
