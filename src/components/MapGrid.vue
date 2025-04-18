@@ -53,6 +53,7 @@ document.body.style.setProperty("--block-size", CELL_SIZE + "px");
 
 .game-grid {
   background: #6098fe;
+  display: inline-block;
 
   .row {
     display: flex;
