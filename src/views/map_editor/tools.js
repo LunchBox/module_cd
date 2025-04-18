@@ -15,6 +15,7 @@ export function placeBlock(map, type, x, y) {
       map[x - 1][y] = { type: "placeholder", allows: ["star"] };
       break;
     default:
+      if (!type) return;
       map[x][y] = { type };
       break;
   }

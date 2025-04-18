@@ -54,5 +54,8 @@ const blockStyle = computed(() => {
   background: #333;
 
   z-index: 10;
+
+  background: no-repeat url("@/assets/rock.png") -200px 0;
+  background-size: auto var(--block-size);
 }
 </style>

@@ -78,6 +78,7 @@ function manufacturePlayer() {
     h: 48,
     speedX: 0,
     speedY: 0,
+    dir: "r",
   };
 }
 
@@ -164,12 +165,10 @@ function interactWithPlatform(rect) {
   if (y + h > rect.y + 2) {
     // +2 避免一碰到就判定為碰到尖刺
     lostLife.value = true;
-  } else {
-    // move the player
-    // 暫時只做到抬高 player
-    if (rect.type === "moving-y") {
-      player.value.y = rect.y - h;
-    }
+  } else if (y + h > rect.y - 1 && rect.type === "moving") {
+  } else if (rect.type === "moving-y") {
+    // 抬高 player
+    player.value.y = rect.y - h;
   }
 }
 
@@ -233,11 +232,15 @@ function renderFrame() {
 function moveLeft(e) {
   // x 方向不需要加速，只需要設置一個目標速度
   player.value.speedX = -MOVING_RATE;
+
+  player.value.dir = "l";
 }
 
 // TODO: 和上面重複了，可以優化
 function moveRight(e) {
   player.value.speedX = MOVING_RATE;
+
+  player.value.dir = "r";
 }
 
 // 每次 keydown 只觸發一次 jump

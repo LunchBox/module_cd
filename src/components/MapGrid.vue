@@ -1,5 +1,5 @@
 <script setup>
-import { MAP_COLS, MAP_ROWS } from "@/stores/config";
+import { CELL_SIZE, MAP_COLS, MAP_ROWS } from "@/stores/config";
 import MovingPlatform from "./MovingPlatform.vue";
 
 const emits = defineEmits([
@@ -16,6 +16,8 @@ function blockClass(x, y) {
     ? props.blockClass(x, y)
     : props.mapData[x][y]?.type;
 }
+
+document.body.style.setProperty("--block-size", CELL_SIZE + "px");
 </script>
 <template>
   <div class="game-grid" @contextmenu.prevent>
@@ -54,8 +56,8 @@ function blockClass(x, y) {
     display: flex;
 
     .block {
-      width: 50px;
-      height: 50px;
+      width: var(--block-size);
+      height: var(--block-size);
       border: 1px solid #eee;
       position: relative;
 
@@ -68,18 +70,24 @@ function blockClass(x, y) {
         width: 100%;
         height: 100%;
         background: #333;
+
+        background: no-repeat url("@/assets/rock.png") -150px 0;
+        background-size: auto var(--block-size);
       }
 
       /* 星星 */
       &.star::before,
       &.star-preview::before {
-        content: "⭐";
+        content: "";
         position: absolute;
         width: 100%;
         height: 100%;
         display: grid;
         place-content: center;
         font-size: 2rem;
+
+        background: no-repeat url("@/assets/gold.gif") 0px 0;
+        background-size: auto var(--block-size);
       }
 
       /* 彈簧 */

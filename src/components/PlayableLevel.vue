@@ -50,7 +50,12 @@ const playerStyle = computed(() => {
   <div>
     <div class="game">
       <MapGrid :mapData="mapData"></MapGrid>
-      <div v-if="player" class="player" :style="playerStyle"></div>
+      <div
+        v-if="player"
+        class="player"
+        :class="{ 'to-left': player.dir === 'l' }"
+        :style="playerStyle"
+      ></div>
     </div>
     Collected Stars: {{ collectedStars }} <br />
     {{ isAccomplished }}
@@ -73,13 +78,20 @@ const playerStyle = computed(() => {
   border: 1px solid blue;
 
   &::before {
-    content: "🏃🏻‍♂️";
+    content: "";
     position: absolute;
     width: 100%;
     height: 100%;
     display: grid;
     place-content: center;
     font-size: 2rem;
+
+    background: no-repeat url("@/assets/player.png") 0px 0;
+    background-size: auto var(--block-size);
+  }
+
+  &.to-left::before {
+    transform: scaleX(-1);
   }
 }
 </style>
