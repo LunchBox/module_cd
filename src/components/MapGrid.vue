@@ -93,13 +93,16 @@ document.body.style.setProperty("--block-size", CELL_SIZE + "px");
       /* 彈簧 */
       &.jump::before,
       &.jump-preview::before {
-        content: "🆙";
+        content: "";
         position: absolute;
         width: 100%;
         height: 100%;
         display: grid;
         place-content: center;
         font-size: 2rem;
+
+        background: no-repeat url("@/assets/rock.png") -250px 0;
+        background-size: auto var(--block-size);
       }
 
       /* 出生點 */
