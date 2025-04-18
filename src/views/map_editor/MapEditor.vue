@@ -265,6 +265,7 @@ useEventListener(document, "keydown", keyDown);
       <button @click="toHome">Home</button>
 
       <button @click="toDemo">Play Demo</button>
+      <button @click="$router.push('/game')">Play Game</button>
 
       <button @click="exportData">Export</button>
       <button @click="importData">Import</button>
