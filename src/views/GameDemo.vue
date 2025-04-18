@@ -29,15 +29,3 @@ initGame();
     <PlayableLevel></PlayableLevel>
   </div>
 </template>
-
-<style scoped>
-:deep() {
-  .game-grid {
-    .row {
-      .block {
-        border: none;
-      }
-    }
-  }
-}
-</style>

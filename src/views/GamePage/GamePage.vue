@@ -176,16 +176,6 @@ function submitRanks() {
 </template>
 
 <style scoped>
-:deep() {
-  .game-grid {
-    .row {
-      .block {
-        border: none;
-      }
-    }
-  }
-}
-
 .modal {
   position: absolute;
   top: 0;

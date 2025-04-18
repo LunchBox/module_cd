@@ -276,4 +276,14 @@ useEventListener(document, "keydown", keyDown);
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+:deep() {
+  .game-grid {
+    .row {
+      .block {
+        border: 1px solid #3c5789;
+      }
+    }
+  }
+}
+</style>
