@@ -24,7 +24,9 @@ function startGame(lv) {}
 .game-preview {
   display: flex;
   gap: 1rem;
-  scale: 0.5;
+  zoom: 0.5;
   transform-origin: 0 0;
+
+  margin: 1rem 0;
 }
 </style>
