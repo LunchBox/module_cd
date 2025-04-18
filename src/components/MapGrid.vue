@@ -52,13 +52,15 @@ document.body.style.setProperty("--block-size", CELL_SIZE + "px");
 }
 
 .game-grid {
+  background: #6098fe;
+
   .row {
     display: flex;
 
     .block {
       width: var(--block-size);
       height: var(--block-size);
-      border: 1px solid #eee;
+      border: 1px solid #3c5789;
       position: relative;
 
       /* 所有 block 用 ::before, .preview.taken 用 ::after */

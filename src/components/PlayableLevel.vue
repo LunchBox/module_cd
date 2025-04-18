@@ -75,7 +75,7 @@ const playerStyle = computed(() => {
 
 .player {
   position: absolute;
-  border: 1px solid blue;
+  /* border: 1px solid blue; */
 
   &::before {
     content: "";
