@@ -136,9 +136,9 @@ document.body.style.setProperty("--block-size", CELL_SIZE + "px");
       &.moving-preview::before {
         content: " ";
         position: absolute;
-        width: 150px;
+        width: calc(var(--block-size) * 3);
         height: 100%;
-        margin-left: -50px;
+        margin-left: calc(-var(--block-size));
       }
       &.moving-preview::before {
         background: #ccc;
@@ -151,8 +151,8 @@ document.body.style.setProperty("--block-size", CELL_SIZE + "px");
         content: "";
         position: absolute;
         width: 100%;
-        height: 150px;
-        margin-top: -50px;
+        height: calc(var(--block-size) * 3);
+        margin-top: calc(-var(--block-size));
       }
       &.moving-y-preview::before {
         background: #ccc;
