@@ -149,6 +149,13 @@ function interactWithStar(rect) {
   }
 }
 
+function interactWithSloped(rect) {
+  const { x, y, w, h } = player.value;
+
+  // -7 是 dirty fix，player 比 rect 矮，往前走會卡到前面的 block
+  player.value.y = rect.y - (x + w - rect.x) - 7;
+}
+
 function interactWithJump(rect) {
   const { x, y, w, h } = player.value;
 
@@ -187,6 +194,9 @@ function checkBlocked(shape) {
         case "jump":
           interactWithJump(rect);
           coll = true;
+          break;
+        case "sloped":
+          interactWithSloped(rect);
           break;
         case "star":
           interactWithStar(rect);
